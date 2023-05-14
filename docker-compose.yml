@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14.1
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - ./.data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  api:
+    image: 'node:14-slim'
+    restart: always
+    container_name: nestjs-boiler-plate
+    build:
+      context: .
+      dockerfile: ./fly/Dockerfile
+    user: 'node'
+    environment:
+      - NODE_ENV=production
+      - VERSION=1.0
+    tty: true
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - postgres
