@@ -1,0 +1,4 @@
+export enum EGroupType {
+    SAVING_GROUP="SAVING_GROUP",
+    COMPANY_GROUP="COMPANY_GROUP"
+}

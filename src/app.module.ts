@@ -16,6 +16,7 @@ import { UserModule } from './modules/user/user.module';
 import { OtpModule } from './modules/otp/otp.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
+import { GroupModule } from './modules/group/group.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthMiddleware } from './common/middlewares/auth.middleware';
     UserModule,
     OtpModule,
     AuthModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
