@@ -19,6 +19,6 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect({ message: 'Welcome to nestjs-boiler-plate' });
+      .expect({ message: 'Welcome to Ikivi Api' });
   });
 });
