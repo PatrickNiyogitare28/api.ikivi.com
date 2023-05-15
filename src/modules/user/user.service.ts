@@ -64,7 +64,7 @@ export class UserService {
     const otp = await this.verifyService.findOne({ code, user_id: user.id });
     if (!otp) throw new BadRequestException('Email verification failed');
     this.verifyService.deleteOneByUser(user.id);
-    this.userRepository.update(user.id, {is_verified: true});
+    this.userRepository.update(user.id, { is_verified: true });
     return {
       success: true,
       message: 'Email verified successfully',
@@ -105,7 +105,7 @@ export class UserService {
     }
   }
 
-  public async getProfile(req: any){
+  public async getProfile(req: any) {
     return req.user;
   }
 }

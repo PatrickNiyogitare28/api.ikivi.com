@@ -4,20 +4,17 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly jwtService: JwtService,
-    ){}
+  constructor(private readonly jwtService: JwtService) {}
 
-    public async signToken(data: Payload){
-      return this.jwtService.sign(data);
-    }
+  public async signToken(data: Payload) {
+    return this.jwtService.sign(data);
+  }
 
-    public async decodeToken(token) {
-        try{
-            return this.jwtService.decode(token);
-        }
-        catch(e){
-            throw new InternalServerErrorException(e)
-        }
+  public async decodeToken(token) {
+    try {
+      return this.jwtService.decode(token);
+    } catch (e) {
+      throw new InternalServerErrorException(e);
     }
+  }
 }

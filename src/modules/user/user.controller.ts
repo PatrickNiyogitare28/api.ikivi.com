@@ -21,17 +21,17 @@ export class UserController {
     return await this.userService.save(createUserDto);
   }
 
-   /*
+  /*
      @role login a new user
      @param LoginDto
      @return AccessToken
      @endpoint /api/v1/login
   */
-     @Post('/login')
-     @HttpCode(201)
-     public async login(@Body() loginDto: LoginDto): Promise<any> {
-       return await this.userService.login(loginDto);
-     }
+  @Post('/login')
+  @HttpCode(201)
+  public async login(@Body() loginDto: LoginDto): Promise<any> {
+    return await this.userService.login(loginDto);
+  }
 
   /*
      @role verifies user's email with code
@@ -48,7 +48,6 @@ export class UserController {
   @ApiBearerAuth()
   @Get('/profile')
   public async getProfile(@Req() req: any): Promise<any> {
-   return await this.userService.getProfile(req);
+    return await this.userService.getProfile(req);
   }
-
 }

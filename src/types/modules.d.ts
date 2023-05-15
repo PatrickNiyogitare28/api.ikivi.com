@@ -1,1 +1,1 @@
-declare module "@nestjs/passport";
+declare module '@nestjs/passport';
