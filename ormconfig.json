@@ -1,15 +1,23 @@
 {
   "type": "postgres",
-  "host": "localhost",
+  "url": "postgres://pzqzysbz:RBeRVe6VGG_HC7C6BF4lkxsFgO_laKi6@horton.db.elephantsql.com/pzqzysbz",
   "port": 5432,
-  "username": "postgres",
-  "password": "@vernom28_niyo",
-  "database": "nestjs-boiler-plate-db",
   "synchronize": true,
   "dropSchema": false,
   "keepConnectionAlive": true,
   "logging": false,
-  "entities": [],
+  "entities": [
+    "/Users/mac/Documents/workspaces/IKIVI/api.ikivi.com/src/database/../modules/**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "/Users/mac/Documents/workspaces/IKIVI/api.ikivi.com/src/database/migrations/**/*{.ts,.js}"
+  ],
+  "seeds": [
+    "/Users/mac/Documents/workspaces/IKIVI/api.ikivi.com/src/database/seeds/**/*{.ts,.js}"
+  ],
+  "factories": [
+    "/Users/mac/Documents/workspaces/IKIVI/api.ikivi.com/src/database/factories/**/*{.ts,.js}"
+  ],
   "cli": {
     "entitiesDir": "src",
     "migrationsDir": "src/database/migrations",

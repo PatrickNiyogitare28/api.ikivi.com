@@ -16,7 +16,9 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "message"', () => {
-      expect(appController.getHome()).toEqual({ message: 'Welcome to nestjs-boiler-plate' });
+      expect(appController.getHome()).toEqual({
+        message: 'Welcome to Ikivi Api',
+      });
     });
   });
 });

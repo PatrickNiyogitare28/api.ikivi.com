@@ -1,0 +1,17 @@
+/**
+ * @description Generates a random 6-digit otp code
+ * @returns {number} otp code
+ */
+const generateOTP = async () => {
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    return otp;
+  };
+  
+  const generateSlug = (name: String) => {
+    const randomNumber = Math.floor(Math.random() * 10000);
+    return `${name
+      .toLowerCase()
+      .replace(/[&\/\\#,+()$~%.'":*?<>{}\s]/g, '-')}${randomNumber}`;
+  };
+  export { generateOTP, generateSlug };
+  

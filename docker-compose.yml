@@ -21,7 +21,7 @@ services:
   api:
     image: 'node:14-slim'
     restart: always
-    container_name: nestjs-boiler-plate
+    container_name: ikivi-api
     build:
       context: .
       dockerfile: ./fly/Dockerfile
