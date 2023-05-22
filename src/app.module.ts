@@ -17,7 +17,7 @@ import { OtpModule } from './modules/otp/otp.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { GroupModule } from './modules/group/group.module';
-import { GroupMetadataModule } from './group-metadata/group-metadata.module';
+import { GroupMetadataModule } from './modules/group-metadata/group-metadata.module';
 
 @Module({
   imports: [

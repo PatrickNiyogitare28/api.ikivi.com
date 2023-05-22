@@ -5,7 +5,6 @@ import { GroupEntity } from './group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EStatus } from 'src/enums/EStatus';
 import { EUserRole } from 'src/enums/EUserRole';
-import { Payload } from '../auth/payload.dto';
 
 @Injectable()
 export class GroupService {
@@ -53,10 +52,6 @@ export class GroupService {
         }
     }
 
-    // public async getGroupsByUserId(userId: string) {
-    //     return await this.groupRepository.find({ members: { id: userId } });
-    // }
-
     public async updateGroupStatus(id: string, status: EStatus) {
         const group = await this.groupRepository.findOne({where: {id}})
         if(!group) throw new NotFoundException("Group not found");
@@ -94,5 +89,11 @@ export class GroupService {
 
     public async getAllGroups() {
         return await this.groupRepository.find();
+    }
+
+    public async findGroupById(id: string){
+        const group = await this.groupRepository.findOne({where: {id}})
+        if(!group) throw new NotFoundException("Group not found");
+        return group;
     }
 }
