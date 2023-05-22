@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { GroupEntity } from '../group/group.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -77,4 +79,14 @@ export class UserEntity {
 
   @CreateDateColumn() createdAt?: Date;
   @UpdateDateColumn() updatedAt?: Date;
+
+  @OneToMany(
+    () => GroupEntity,
+    (group: GroupEntity) => group.group_owner,
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+  )
+  groups: Array<GroupEntity>;
 }

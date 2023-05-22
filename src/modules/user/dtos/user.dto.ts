@@ -48,13 +48,13 @@ export class CreateUserDto {
 }
 
 export class LoginDto {
-  @ApiProperty({ example: 'johndoe@gmail.com', required: true })
+  @ApiProperty({ example: 'johndoe2@gmail.com', required: true })
   @IsString()
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ example: 'test@gmail.com', required: true })
+  @ApiProperty({ example: 'test@123', required: true })
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
