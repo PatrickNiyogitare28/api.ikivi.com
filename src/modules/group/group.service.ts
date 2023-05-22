@@ -1,9 +1,11 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreateGroupDto } from './dto/create-group.dto';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { CreateGroupDto } from './dto/group.dto';
 import { Repository } from 'typeorm';
 import { GroupEntity } from './group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EStatus } from 'src/enums/EStatus';
+import { EUserRole } from 'src/enums/EUserRole';
+import { Payload } from '../auth/payload.dto';
 
 @Injectable()
 export class GroupService {
@@ -24,7 +26,7 @@ export class GroupService {
                 data: group,
             };
         } catch (e) {
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException(e.message);
         }
     }
 
@@ -43,7 +45,7 @@ export class GroupService {
     }
 
     public async getGroupsByOwner(ownerId: string) {
-        const group =  await this.groupRepository.find({ group_owner: ownerId });
+        const group =  await this.groupRepository.find({where: { group_owner: ownerId }});
         if(!group) throw new NotFoundException(`Group not found`)
         return {
             success: true,
@@ -66,20 +68,23 @@ export class GroupService {
         }
     }
 
-    public async updateGroupData(id: string, newData: Partial<CreateGroupDto>) {
+    public async updateGroupData(id: string, newData: Partial<CreateGroupDto>, role: EUserRole, user_id: string) {
         const group = await this.groupRepository.findOne({where: {id}})
         if(!group) throw new NotFoundException("Group not found");
+        if(user_id !== group.group_owner.id && role !== EUserRole.SYSTEM_ADMIN) throw new UnauthorizedException("You are not allowed to perform this action")
         Object.assign(group, newData);
         const newGroup = await this.groupRepository.save(group);
+        delete newGroup.group_owner;
         return {
             success: true,
             data: newGroup
         };
     }
 
-    public async deleteGroup(id: string) {
+    public async deleteGroup(id: string, role: EUserRole, user_id: string) {
         const group = await this.groupRepository.findOne({where: {id}})
         if(!group) throw new NotFoundException("Group not found");
+        if(user_id !== group.group_owner.id && role !== EUserRole.SYSTEM_ADMIN) throw new UnauthorizedException("You are not allowed to perform this action")
             await this.groupRepository.delete(id);
             return {
                 success: true,

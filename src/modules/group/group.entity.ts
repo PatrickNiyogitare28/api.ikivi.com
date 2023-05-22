@@ -23,8 +23,12 @@ export class GroupEntity {
   @Column({ default: false, nullable: false })
   verified: boolean;
 
-  @ManyToOne('UserEntity', (user: UserEntity) => user.groups)
+  @ManyToOne('UserEntity', (user: UserEntity) => user.groups, {eager: true})
   @JoinColumn({ name: 'group_owner' })
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
   group_owner: UserEntity;
 
   @Column({ type: 'timestamp', default: new Date() })

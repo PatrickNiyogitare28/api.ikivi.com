@@ -1,20 +1,21 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Req } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { GroupService } from './group.service';
-import { CreateGroupDto } from './dto/create-group.dto';
+import { CreateGroupDto, EditGroupStatusDto, UpdatedGroupDto } from './dto/group.dto';
 import { GroupEntity } from './group.entity';
 import { EStatus } from 'src/enums/EStatus';
 
 @ApiTags('Groups')
 @Controller('groups')
+@ApiBearerAuth()
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
-  @Post()
+  @Post("/")
   @ApiResponse({ status: 201, description: 'Group registered successfully', type: GroupEntity })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   async register(@Body() newGroupDto: CreateGroupDto, @Req() req: any): Promise<any> {
-    return await this.groupService.register(newGroupDto, req.user.id);
+    return await this.groupService.register(newGroupDto, req.user.user_id);
   }
 
   @Get(':id')
@@ -41,14 +42,14 @@ export class GroupController {
 
   @Put(':id/status')
   @ApiParam({ name: 'id', description: 'Group ID' })
-  @ApiBody({ type: String, enum: ['active', 'inactive'] })
+  @ApiBody({ type: EditGroupStatusDto })
   @ApiResponse({ status: 200, description: 'Group status updated' })
   @ApiResponse({ status: 404, description: 'Group not found' })
   async updateGroupStatus(
     @Param('id') id: string,
-    @Body('status') status: EStatus,
+    @Body() newStatusDto: EditGroupStatusDto,
   ): Promise<any> {
-    return await this.groupService.updateGroupStatus(id, status);
+    return await this.groupService.updateGroupStatus(id, newStatusDto.status);
   }
 
   @Put(':id')
@@ -58,9 +59,10 @@ export class GroupController {
   @ApiResponse({ status: 404, description: 'Group not found' })
   async updateGroupData(
     @Param('id') id: string,
-    @Body() newData: CreateGroupDto,
+    @Body() newData: UpdatedGroupDto,
+    @Req() req: any
   ): Promise<any> {
-    return await this.groupService.updateGroupData(id, newData);
+    return await this.groupService.updateGroupData(id, newData, req.user.role, req.user.user_id);
   }
 
   @Delete(':id')
@@ -70,7 +72,8 @@ export class GroupController {
   @ApiResponse({ status: 404, description: 'Group not found' })
   async deleteGroup(
     @Param('id') id: string,
+    @Req() req: any
   ): Promise<any> {
-    return await this.groupService.deleteGroup(id);
+    return await this.groupService.deleteGroup(id, req.user.role, req.user.user_id);
   }
 }

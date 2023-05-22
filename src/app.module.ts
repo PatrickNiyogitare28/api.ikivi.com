@@ -17,6 +17,7 @@ import { OtpModule } from './modules/otp/otp.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { GroupModule } from './modules/group/group.module';
+import { GroupMetadataModule } from './group-metadata/group-metadata.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { GroupModule } from './modules/group/group.module';
     OtpModule,
     AuthModule,
     GroupModule,
+    GroupMetadataModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -46,6 +48,8 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: '*/profile', method: RequestMethod.GET });
+      .forRoutes(
+        { path: '*/profile', method: RequestMethod.GET },
+    );
   }
 }
