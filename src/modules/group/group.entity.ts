@@ -10,6 +10,7 @@ import { EGroupType } from 'src/enums/EGroupType';
 import { EStatus } from 'src/enums/EStatus';
 import { UserEntity } from '../user/users.entity';
 import { GroupMetadataEntity } from 'src/modules/group-metadata/group-metadata.entity';
+import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -48,6 +49,12 @@ export class GroupEntity {
     { cascade: true, eager: true },
   )
   groupMetadata: GroupMetadataEntity[];
+
+  @OneToMany(
+    () => JoinCodesEntity,
+    (joinCode: JoinCodesEntity) => joinCode.group,
+  )
+  joinCodes: JoinCodesEntity[];
 
   @Column({ type: 'timestamp', default: new Date() })
   created_at: Date;
