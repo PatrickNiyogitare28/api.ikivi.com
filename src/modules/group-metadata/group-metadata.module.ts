@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { GroupMetadataController } from './group-metadata.controller';
 import { GroupMetadataService } from './group-metadata.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,26 +16,23 @@ import { AdminMiddleware } from 'src/common/middlewares/admin.middleware';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GroupMetadataEntity, GroupEntity,  
-   ]), 
-   JwtModule.register({
-    secret: process.env.SECRETKEY,
-    signOptions: {
-      expiresIn: process.env.EXPIRESIN,
-    },
-  })
+    TypeOrmModule.forFeature([GroupMetadataEntity, GroupEntity]),
+    JwtModule.register({
+      secret: process.env.SECRETKEY,
+      signOptions: {
+        expiresIn: process.env.EXPIRESIN,
+      },
+    }),
   ],
   controllers: [GroupMetadataController],
-  providers: [GroupMetadataService, GroupService]
+  providers: [GroupMetadataService, GroupService],
 })
 export class GroupMetadataModule implements NestModule {
-  configure(consumer: MiddlewareConsumer){
+  configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(AuthMiddleware)
-    .forRoutes(GroupMetadataController)
-    .apply(AdminMiddleware)
-    .forRoutes(
-      { path: '**/group-metadata/', method: RequestMethod.GET },
-    )
+      .apply(AuthMiddleware)
+      .forRoutes(GroupMetadataController)
+      .apply(AdminMiddleware)
+      .forRoutes({ path: '**/group-metadata/', method: RequestMethod.GET });
   }
 }
