@@ -28,7 +28,7 @@ export class GroupEntity {
   @JoinColumn({ name: 'group_owner' })
   group_owner: UserEntity;
 
-  @OneToMany(() => GroupMetadataEntity, (groupMetadata: GroupMetadataEntity) => groupMetadata.group, { cascade: true })
+  @OneToMany(() => GroupMetadataEntity, (groupMetadata: GroupMetadataEntity) => groupMetadata.group, { cascade: true, eager: true })
   groupMetadata: GroupMetadataEntity[];
 
   @Column({ type: 'timestamp', default: new Date() })
