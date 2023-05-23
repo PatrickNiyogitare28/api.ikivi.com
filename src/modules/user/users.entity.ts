@@ -80,13 +80,9 @@ export class UserEntity {
   @CreateDateColumn() createdAt?: Date;
   @UpdateDateColumn() updatedAt?: Date;
 
-  @OneToMany(
-    () => GroupEntity,
-    (group: GroupEntity) => group.group_owner,
-    {
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-  )
+  @OneToMany(() => GroupEntity, (group: GroupEntity) => group.group_owner, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   groups: Array<GroupEntity>;
 }

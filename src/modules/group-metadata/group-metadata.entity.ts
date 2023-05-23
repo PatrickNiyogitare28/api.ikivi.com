@@ -16,7 +16,12 @@ export class GroupMetadataEntity {
   @Column({ nullable: true })
   supporting_document_url?: string;
 
-  @Column({ type: 'enum', enum: EStatus, default: EStatus.ACTIVE, nullable: false })
+  @Column({
+    type: 'enum',
+    enum: EStatus,
+    default: EStatus.ACTIVE,
+    nullable: false,
+  })
   status: EStatus;
 
   @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.groupMetadata)

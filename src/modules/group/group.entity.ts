@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { EGroupType } from 'src/enums/EGroupType';
 import { EStatus } from 'src/enums/EStatus';
 import { UserEntity } from '../user/users.entity';
@@ -18,17 +25,28 @@ export class GroupEntity {
   @Column({ type: 'enum', enum: EGroupType, nullable: false })
   type: EGroupType;
 
-  @Column({ type: 'enum', enum: EStatus, default: EStatus.ACTIVE, nullable: false })
+  @Column({
+    type: 'enum',
+    enum: EStatus,
+    default: EStatus.ACTIVE,
+    nullable: false,
+  })
   status: EStatus;
 
   @Column({ default: false, nullable: false })
   verified: boolean;
 
-  @ManyToOne(() => UserEntity, (user: UserEntity) => user.groups, { eager: true })
+  @ManyToOne(() => UserEntity, (user: UserEntity) => user.groups, {
+    eager: true,
+  })
   @JoinColumn({ name: 'group_owner' })
   group_owner: UserEntity;
 
-  @OneToMany(() => GroupMetadataEntity, (groupMetadata: GroupMetadataEntity) => groupMetadata.group, { cascade: true, eager: true })
+  @OneToMany(
+    () => GroupMetadataEntity,
+    (groupMetadata: GroupMetadataEntity) => groupMetadata.group,
+    { cascade: true, eager: true },
+  )
   groupMetadata: GroupMetadataEntity[];
 
   @Column({ type: 'timestamp', default: new Date() })

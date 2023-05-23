@@ -11,8 +11,9 @@ export class AdminMiddleware implements NestMiddleware {
   constructor() {}
   async use(req: any, _: Response, next: Function) {
     try {
-      if(!req.user) throw new UnauthorizedException("Unauthorized")
-      if(req.user.role == EUserRole.SYSTEM_ADMIN) throw new UnauthorizedException("Access denied")
+      if (!req.user) throw new UnauthorizedException('Unauthorized');
+      if (req.user.role == EUserRole.SYSTEM_ADMIN)
+        throw new UnauthorizedException('Access denied');
     } catch (error) {
       throw new UnauthorizedException(error.message);
     }

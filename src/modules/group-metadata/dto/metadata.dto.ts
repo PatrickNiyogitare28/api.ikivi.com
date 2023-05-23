@@ -41,5 +41,4 @@ export class UpdateGroupMetadataDto {
   @IsOptional()
   @IsUrl()
   supporting_document_url?: string;
-
 }
