@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Req, Patch } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { GroupService } from './group.service';
 import { CreateGroupDto, EditGroupStatusDto, UpdatedGroupDto } from './dto/group.dto';
 import { GroupEntity } from './group.entity';
-import { EStatus } from 'src/enums/EStatus';
 
 @ApiTags('Groups')
 @Controller('groups')
@@ -32,13 +31,6 @@ export class GroupController {
   async getGroupsByOwner(@Param('ownerId') ownerId: string): Promise<any> {
     return await this.groupService.getGroupsByOwner(ownerId);
   }
-
-//   @Get('user/:userId')
-//   @ApiParam({ name: 'userId', description: 'User ID' })
-//   @ApiResponse({ status: 200, description: 'Groups found', type: [GroupEntity] })
-//   async getGroupsByUserId(@Param('userId') userId: string): Promise<any> {
-//     return await this.groupService.getGroupsByUserId(userId);
-//   }
 
   @Put(':id/status')
   @ApiParam({ name: 'id', description: 'Group ID' })
@@ -75,5 +67,25 @@ export class GroupController {
     @Req() req: any
   ): Promise<any> {
     return await this.groupService.deleteGroup(id, req.user.role, req.user.user_id);
+  }
+
+  @Patch(':id/verify')
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiResponse({ status: 200, description: 'Group data delete', type: GroupEntity })
+  @ApiResponse({ status: 404, description: 'Group not found' })
+  async verifyGroup(
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.groupService.verifyGroup(id);
+  }
+
+  @Patch(':id/unverify')
+  @ApiParam({ name: 'id', description: 'Group ID' })
+  @ApiResponse({ status: 200, description: 'Group data delete', type: GroupEntity })
+  @ApiResponse({ status: 404, description: 'Group not found' })
+  async unverify(
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.groupService.unverify(id);
   }
 }
