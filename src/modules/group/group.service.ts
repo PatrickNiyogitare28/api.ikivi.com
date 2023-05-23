@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/group.dto';
 import { Repository } from 'typeorm';
 import { GroupEntity } from './group.entity';
@@ -86,6 +86,28 @@ export class GroupService {
                 message: 'Group deleted successfully',
             };
         }
+
+  public async verifyGroup(id:string){
+    const group = await this.groupRepository.findOne({where: {id}});
+    if(!group) throw new NotFoundException("Group not found");
+    if(group.verified) throw new BadRequestException("Group is already verified");
+    await this.groupRepository.update(id, {verified: true});
+    return {
+        success: true,
+        message: "Group verified successfully",
+    }
+  }
+
+  public async unverify(id: string){
+    const group = await this.groupRepository.findOne({where: {id}});
+    if(!group) throw new NotFoundException("Group not found");
+    if(!group.verified) throw new BadRequestException("Group is already not verified");
+    await this.groupRepository.update(id, {verified: false});
+    return {
+        success: true,
+        message: "Group unverified successfully",
+    }
+  }
 
     public async getAllGroups() {
         return await this.groupRepository.find();

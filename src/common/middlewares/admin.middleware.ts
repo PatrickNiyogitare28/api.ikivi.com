@@ -12,9 +12,9 @@ export class AdminMiddleware implements NestMiddleware {
   async use(req: any, _: Response, next: Function) {
     try {
       if(!req.user) throw new UnauthorizedException("Unauthorized")
-      if(req.user.role != EUserRole.SYSTEM_ADMIN) throw new UnauthorizedException("Unauthorized")
+      if(req.user.role == EUserRole.SYSTEM_ADMIN) throw new UnauthorizedException("Access denied")
     } catch (error) {
-      throw new UnauthorizedException("Invalid token");
+      throw new UnauthorizedException(error.message);
     }
     next();
   }

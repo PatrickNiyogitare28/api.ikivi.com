@@ -30,7 +30,7 @@ export class GroupMetadataModule implements NestModule {
     .forRoutes(GroupMetadataController)
     .apply(AdminMiddleware)
     .forRoutes(
-      { path: '/', method: RequestMethod.GET },
+      { path: '**/group-metadata/', method: RequestMethod.GET },
     )
   }
 }
