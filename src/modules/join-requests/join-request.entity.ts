@@ -26,14 +26,17 @@ import { UserEntity } from 'src/modules/user/users.entity';
   
     @ManyToOne(() => JoinCodesEntity, (joinCode: JoinCodesEntity) => joinCode.joinRequests)
     @JoinColumn({ name: 'join_code' })
+    @Column({nullable: false})
     join_code: string;
   
     @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.joinRequests)
     @JoinColumn({ name: 'group' })
+    @Column({nullable: false})
     group: string;
 
     @ManyToOne(() => UserEntity, (user: UserEntity) => user.joinRequest)
     @JoinColumn({ name: 'user' })
+    @Column({nullable: false})
     user: string;
   }
   

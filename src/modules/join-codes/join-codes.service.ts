@@ -11,8 +11,8 @@ import { generateRandomCode } from 'src/helpers/misc';
 export class JoinCodesService {
   constructor(
     @InjectRepository(JoinCodesEntity)
-    private readonly joinCodesRepository: Repository<JoinCodesEntity>,
-    private readonly groupService: GroupService
+    private joinCodesRepository: Repository<JoinCodesEntity>,
+    private groupService: GroupService
 
   ) {}
 
@@ -22,7 +22,7 @@ export class JoinCodesService {
     if(group.group_owner.id !== user_id && user_role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
     const code = generateRandomCode();
     await this._disactiveCodes(group_id);
-    const newCode = await this.joinCodesRepository.save({code, group: group_id});
+    const newCode = await this.joinCodesRepository.save({code, group: group_id} as any);
     return {
         success: true,
         message: 'A new join code generated successfully',
@@ -79,7 +79,7 @@ export class JoinCodesService {
       if(!codeExists) return false;
       return codeExists;
     }
-    catch(e){
+    catch(e){ 
       throw new InternalServerErrorException(e.message)
     }
   }

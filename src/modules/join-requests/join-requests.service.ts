@@ -6,13 +6,15 @@ import { NewJoinRequestDto } from './dto/join-request.dto';
 import { JoinCodesService } from '../join-codes/join-codes.service';
 import { ERequestStatus } from 'src/enums/ERequestStatus';
 import { EUserRole } from 'src/enums/EUserRole';
+import { GroupService } from '../group/group.service';
 
 @Injectable()
 export class JoinRequestsService {
     constructor(
         @InjectRepository(JoinRequestsEntity)
-        private readonly joinRequestRepository: Repository<JoinRequestsEntity>,
-        private readonly joinCodesService: JoinCodesService,
+        private  joinRequestRepository: Repository<JoinRequestsEntity>,
+        private  joinCodesService: JoinCodesService,
+        private groupService: GroupService
     ){}
 
     public async requestGroupJoin(newJoinRequest: NewJoinRequestDto, user_id: string){
@@ -37,11 +39,10 @@ export class JoinRequestsService {
 
     public async updateStatus(request_id: string, status: ERequestStatus, user_role: EUserRole, user_id: string){
         const requestExists = await this.joinRequestRepository.findOne({where: {id: request_id}});
-        console.log(requestExists);
         if(!requestExists) throw new BadRequestException("Join request not found");
-        const group = await this.joinCodesService.getGroupByJoinCode(requestExists.join_code);
+        const group = await this.groupService.getGroupById(requestExists.group);
         if(!group) throw new BadRequestException("Group not found");
-        if(group.group_owner.id != user_id && user_role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
+        if(group.data.group_owner.id != user_id && user_role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
         await this.joinRequestRepository.update(request_id, {status});
         // if(status == ERequestStatus.APPROVED) approveJoinRequest();
         return {
@@ -53,6 +54,34 @@ export class JoinRequestsService {
     public async listRequests(user_id: string){
         return await this.joinRequestRepository.find({where: {user: user_id}})
     }
+
+    public async getRequestsByGroup(group_id: string, role: EUserRole, user_id: string){
+        const group = await this.groupService.findGroupById(group_id);
+        if(!group) throw new BadRequestException("Group not found");
+        if(group.group_owner.id != user_id && role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
+        const requests = await this.joinRequestRepository.find({where: {group: group_id}});
+        return requests;
+    }
+
+    public async getRequestsByGroupAndStatus(group_id: string, status: ERequestStatus, role: EUserRole, user_id: string){
+        const group = await this.groupService.findGroupById(group_id);
+        if(!group) throw new BadRequestException("Group not found");
+        if(group.group_owner.id != user_id && role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
+        const requests = await this.joinRequestRepository.find({where: {group: group_id, status}});
+        return requests;
+    }
+
+    public async cancelRequest(request_id:string, role:EUserRole, user_id: string){
+        const request = await this.joinRequestRepository.findOne({where: {id: request_id}});
+        if(!request) throw new BadRequestException("Request was not found");
+        if(request.user !== user_id && role != EUserRole.SYSTEM_ADMIN) throw new BadRequestException("Access denied");
+        await this.joinRequestRepository.update(request_id, {status: ERequestStatus.CANCELED});
+        return {
+            success: true,
+            message: 'Join request canceled successfully'
+        }
+    }
+
     public async _findRequestByUserId(user_id: string, join_code: string){
         try{
             const exists = await this.joinRequestRepository.findOne({where: {user: user_id, join_code}});
