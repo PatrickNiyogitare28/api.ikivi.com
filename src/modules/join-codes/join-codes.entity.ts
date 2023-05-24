@@ -6,6 +6,8 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { GroupEntity } from 'src/modules/group/group.entity';
 import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
@@ -30,4 +32,7 @@ export class JoinCodesEntity {
     (joinRequest: JoinRequestsEntity) => joinRequest.join_code,
   )
   joinRequests: JoinRequestsEntity[];
+
+  @CreateDateColumn() createdAt?: Date;
+  @UpdateDateColumn() updatedAt?: Date;
 }

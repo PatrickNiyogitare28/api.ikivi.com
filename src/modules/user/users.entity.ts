@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { GroupEntity } from 'src/modules/group/group.entity';
 import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -92,4 +93,10 @@ export class UserEntity {
     (joinRequest: JoinRequestsEntity) => joinRequest.user,
   )
   joinRequest: JoinRequestsEntity;
+
+  @OneToMany(
+  () => GroupMembersEntity,
+  (groupMembership: GroupMembersEntity) => groupMembership.user
+  )
+  groupMemberships: GroupMembersEntity
 }

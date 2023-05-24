@@ -11,6 +11,7 @@ import { JoinCodesService } from '../join-codes/join-codes.service';
 import { ERequestStatus } from 'src/enums/ERequestStatus';
 import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
+import { GroupMembersService } from '../group-members/group-members.service';
 
 @Injectable()
 export class JoinRequestsService {
@@ -19,6 +20,7 @@ export class JoinRequestsService {
     private joinRequestRepository: Repository<JoinRequestsEntity>,
     private joinCodesService: JoinCodesService,
     private groupService: GroupService,
+    private groupMembersService: GroupMembersService
   ) {}
 
   public async requestGroupJoin(
@@ -74,7 +76,7 @@ export class JoinRequestsService {
     )
       throw new BadRequestException('Access denied');
     await this.joinRequestRepository.update(request_id, { status });
-    // if(status == ERequestStatus.APPROVED) approveJoinRequest();
+    if(status == ERequestStatus.APPROVED) await this.groupMembersService.addMember({user: user_id, group: group.data.id});
     return {
       success: true,
       message: `Request  ${status.toLocaleLowerCase()} successfully`,
