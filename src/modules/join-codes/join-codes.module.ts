@@ -19,12 +19,10 @@ import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
     }),
   ],
   controllers: [JoinCodesController],
-  providers: [JoinCodesService, GroupService]
+  providers: [JoinCodesService, GroupService],
 })
 export class JoinCodesModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(JoinCodesController)
+    consumer.apply(AuthMiddleware).forRoutes(JoinCodesController);
   }
 }

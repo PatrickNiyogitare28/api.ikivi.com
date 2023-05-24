@@ -14,9 +14,8 @@ const generateSlug = (name: string) => {
     .replace(/[&\/\\#,+()$~%.'":*?<>{}\s]/g, '-')}${randomNumber}`;
 };
 
-const generateRandomCode = () =>  {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Define the possible characters
+const generateRandomCode = () => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; // Define the possible characters
   let code = '';
   for (let i = 0; i < 6; i++) {
     // Generate 6 random characters
@@ -24,5 +23,5 @@ const generateRandomCode = () =>  {
     code += characters.charAt(index);
   }
   return code;
-}
+};
 export { generateOTP, generateSlug, generateRandomCode };

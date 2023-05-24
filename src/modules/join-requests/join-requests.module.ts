@@ -12,7 +12,11 @@ import { GroupEntity } from '../group/group.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([JoinRequestsEntity, JoinCodesEntity, GroupEntity]),
+    TypeOrmModule.forFeature([
+      JoinRequestsEntity,
+      JoinCodesEntity,
+      GroupEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -21,12 +25,10 @@ import { GroupEntity } from '../group/group.entity';
     }),
   ],
   controllers: [JoinRequestsController],
-  providers: [JoinRequestsService, JoinCodesService, GroupService]
+  providers: [JoinRequestsService, JoinCodesService, GroupService],
 })
 export class JoinRequestsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(JoinRequestsController)
+    consumer.apply(AuthMiddleware).forRoutes(JoinRequestsController);
   }
 }

@@ -87,6 +87,9 @@ export class UserEntity {
   })
   groups: Array<GroupEntity>;
 
-  @OneToMany(() => JoinRequestsEntity, (joinRequest: JoinRequestsEntity) => joinRequest.user)
+  @OneToMany(
+    () => JoinRequestsEntity,
+    (joinRequest: JoinRequestsEntity) => joinRequest.user,
+  )
   joinRequest: JoinRequestsEntity;
 }
