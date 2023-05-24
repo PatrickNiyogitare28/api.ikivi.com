@@ -18,6 +18,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthMiddleware } from './common/middlewares/auth.middleware';
 import { GroupModule } from './modules/group/group.module';
 import { GroupMetadataModule } from './modules/group-metadata/group-metadata.module';
+import { GroupMembersModule } from './modules/group-members/group-members.module';
+import { JoinCodesModule } from './modules/join-codes/join-codes.module';
+import { JoinRequestsModule } from './modules/join-requests/join-requests.module';
 
 @Module({
   imports: [
@@ -40,6 +43,9 @@ import { GroupMetadataModule } from './modules/group-metadata/group-metadata.mod
     AuthModule,
     GroupModule,
     GroupMetadataModule,
+    GroupMembersModule,
+    JoinCodesModule,
+    JoinRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

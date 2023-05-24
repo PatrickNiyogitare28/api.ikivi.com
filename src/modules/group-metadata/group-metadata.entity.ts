@@ -1,5 +1,5 @@
 import { EStatus } from 'src/enums/EStatus';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { GroupEntity } from 'src/modules/group/group.entity';
 
 @Entity({ name: 'group_metadata' })
@@ -27,4 +27,7 @@ export class GroupMetadataEntity {
   @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.groupMetadata)
   @Column()
   group: string;
+
+  @CreateDateColumn() createdAt?: Date;
+  @UpdateDateColumn() updatedAt?: Date;
 }

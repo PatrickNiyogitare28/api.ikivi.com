@@ -1,0 +1,6 @@
+export enum ERequestStatus {
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  PENDING = 'PENDING',
+  CANCELED = 'CANCELED',
+}

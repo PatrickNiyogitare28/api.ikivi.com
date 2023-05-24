@@ -1,15 +1,20 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { EGroupType } from 'src/enums/EGroupType';
 import { EStatus } from 'src/enums/EStatus';
 import { UserEntity } from '../user/users.entity';
 import { GroupMetadataEntity } from 'src/modules/group-metadata/group-metadata.entity';
+import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
+import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
+import { GroupMembersEntity } from 'src/modules/group-members/group-members.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -49,9 +54,24 @@ export class GroupEntity {
   )
   groupMetadata: GroupMetadataEntity[];
 
-  @Column({ type: 'timestamp', default: new Date() })
-  created_at: Date;
+  @OneToMany(
+    () => JoinCodesEntity,
+    (joinCode: JoinCodesEntity) => joinCode.group,
+  )
+  joinCodes: JoinCodesEntity[];
 
-  @Column({ type: 'timestamp', default: new Date() })
-  updated_at: Date;
+  @OneToMany(
+    () => JoinRequestsEntity,
+    (joinRequest: JoinRequestsEntity) => joinRequest.group,
+  )
+  joinRequests: JoinRequestsEntity[];
+
+  @CreateDateColumn() createdAt?: Date;
+  @UpdateDateColumn() updatedAt?: Date;
+
+  @OneToMany(
+    () => GroupMembersEntity,
+    (groupMembership: GroupMembersEntity) => groupMembership.group
+    )
+    members: GroupMembersEntity
 }
