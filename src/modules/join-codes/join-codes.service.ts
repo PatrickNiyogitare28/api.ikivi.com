@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JoinCodesEntity } from './join-codes.entity';
@@ -73,11 +73,31 @@ export class JoinCodesService {
     return await this.joinCodesRepository.find({ where: { group: group_id } });
   }
   
+  public async findActiveCode(code: string){
+    try{
+      const codeExists = await this.joinCodesRepository.findOne({where: {code, status: EStatus.ACTIVE}});
+      if(!codeExists) return false;
+      return codeExists;
+    }
+    catch(e){
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
+
   private async _disactiveCodes(group_id: string) {
     await this.joinCodesRepository.update(
       { group: group_id },
       { status: EStatus.INACTIVE },
     );
+  }
+
+  public async getGroupByJoinCode(code: string){
+    const codeExists = await this.joinCodesRepository.findOne({where: {id: code}});
+    if(!codeExists) throw new BadRequestException("Join code not found "+code);
+    const group = await this.groupService.findGroupById(codeExists.group);
+    if(!group) throw new NotFoundException("Group not found");
+    return group;
   }
   
 }

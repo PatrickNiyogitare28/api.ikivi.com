@@ -11,6 +11,7 @@ import { EStatus } from 'src/enums/EStatus';
 import { UserEntity } from '../user/users.entity';
 import { GroupMetadataEntity } from 'src/modules/group-metadata/group-metadata.entity';
 import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
+import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -55,6 +56,12 @@ export class GroupEntity {
     (joinCode: JoinCodesEntity) => joinCode.group,
   )
   joinCodes: JoinCodesEntity[];
+
+  @OneToMany(
+    () => JoinRequestsEntity,
+    (joinRequest: JoinRequestsEntity) => joinRequest.group,
+  )
+  joinRequests: JoinRequestsEntity[];
 
   @Column({ type: 'timestamp', default: new Date() })
   created_at: Date;

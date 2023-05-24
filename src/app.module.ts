@@ -20,6 +20,7 @@ import { GroupModule } from './modules/group/group.module';
 import { GroupMetadataModule } from './modules/group-metadata/group-metadata.module';
 import { GroupMembersModule } from './modules/group-members/group-members.module';
 import { JoinCodesModule } from './modules/join-codes/join-codes.module';
+import { JoinRequestsModule } from './modules/join-requests/join-requests.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { JoinCodesModule } from './modules/join-codes/join-codes.module';
     GroupMetadataModule,
     GroupMembersModule,
     JoinCodesModule,
+    JoinRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
