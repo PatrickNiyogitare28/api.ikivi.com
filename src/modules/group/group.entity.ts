@@ -15,6 +15,7 @@ import { GroupMetadataEntity } from 'src/modules/group-metadata/group-metadata.e
 import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
 import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
 import { GroupMembersEntity } from 'src/modules/group-members/group-members.entity';
+import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -74,4 +75,7 @@ export class GroupEntity {
     (groupMembership: GroupMembersEntity) => groupMembership.group
     )
     members: GroupMembersEntity
+
+  @OneToMany(() => ContributionTermEntity, (contributionTerm: ContributionTermEntity) => contributionTerm.group)
+  contributionTerms: ContributionTermEntity
 }
