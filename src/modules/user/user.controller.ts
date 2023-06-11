@@ -28,7 +28,7 @@ export class UserController {
      @endpoint /api/v1/login
   */
   @Post('/login')
-  @HttpCode(201)
+  @HttpCode(200)
   public async login(@Body() loginDto: LoginDto): Promise<any> {
     return await this.userService.login(loginDto);
   }

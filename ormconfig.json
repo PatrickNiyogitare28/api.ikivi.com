@@ -1,6 +1,6 @@
 {
   "type": "postgres",
-  "url": "postgres://pzqzysbz:RBeRVe6VGG_HC7C6BF4lkxsFgO_laKi6@horton.db.elephantsql.com/pzqzysbz",
+  "url": "postgres://eiurwxqo:YntMFuIpjREPn4FNNL_z5DNk4zN-c2gZ@tyke.db.elephantsql.com/eiurwxqo",
   "port": 5432,
   "synchronize": true,
   "dropSchema": false,

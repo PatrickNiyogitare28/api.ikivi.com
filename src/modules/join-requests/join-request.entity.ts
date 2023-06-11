@@ -30,18 +30,18 @@ export class JoinRequestsEntity {
 
   @ManyToOne(
     () => JoinCodesEntity,
-    (joinCode: JoinCodesEntity) => joinCode.joinRequests,
+    (joinCode: JoinCodesEntity) => joinCode.joinRequests, {eager: true}
   )
   @JoinColumn({ name: 'join_code' })
   @Column({ nullable: false })
   join_code: string;
 
-  @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.joinRequests)
+  @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.joinRequests, {eager: true})
   @JoinColumn({ name: 'group' })
   @Column({ nullable: false })
   group: string;
 
-  @ManyToOne(() => UserEntity, (user: UserEntity) => user.joinRequest)
+  @ManyToOne(() => UserEntity, (user: UserEntity) => user.joinRequest, {eager: true})
   @JoinColumn({ name: 'user' })
   @Column({ nullable: false })
   user: string;
