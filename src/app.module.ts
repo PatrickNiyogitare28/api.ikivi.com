@@ -22,6 +22,11 @@ import { GroupMembersModule } from './modules/group-members/group-members.module
 import { JoinCodesModule } from './modules/join-codes/join-codes.module';
 import { JoinRequestsModule } from './modules/join-requests/join-requests.module';
 import { ContributionTermModule } from './modules/contribution-term/contribution-term.module';
+import { ContributionModule } from './modules/contribution/contribution.module';
+import { GroupInterestsModule } from './modules/group-interests/group-interests.module';
+import { TransactionsModule } from './modules/transactions/transactions.module';
+import { PeriodicEarnModule } from './modules/periodic-earn/periodic-earn.module';
+import { LoanModule } from './modules/loan/loan.module';
 
 @Module({
   imports: [
@@ -48,6 +53,11 @@ import { ContributionTermModule } from './modules/contribution-term/contribution
     JoinCodesModule,
     JoinRequestsModule,
     ContributionTermModule,
+    ContributionModule,
+    GroupInterestsModule,
+    TransactionsModule,
+    PeriodicEarnModule,
+    LoanModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,10 +7,12 @@ import { GroupEntity } from '../group/group.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ContributionTermEntity } from './contribution-term.entity';
 import { GroupService } from '../group/group.service';
+import { GroupMembersService } from '../group-members/group-members.service';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ContributionTermEntity, GroupEntity]),
+    TypeOrmModule.forFeature([ContributionTermEntity, GroupEntity, GroupMembersEntity]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -18,7 +20,7 @@ import { GroupService } from '../group/group.service';
       },
     }),
   ],
-  providers: [ContributionTermService, GroupService],
+  providers: [ContributionTermService, GroupService, GroupMembersService],
   controllers: [ContributionTermController]
 })
 export class ContributionTermModule implements NestModule {

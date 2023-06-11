@@ -11,6 +11,7 @@ import {
 import { GroupEntity } from 'src/modules/group/group.entity';
 import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
 import { GroupMembersEntity } from '../group-members/group-members.entity';
+import { ContributionEntity } from '../contribution/contribution.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -99,4 +100,10 @@ export class UserEntity {
   (groupMembership: GroupMembersEntity) => groupMembership.user
   )
   groupMemberships: GroupMembersEntity
+
+  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.user)
+  contributions: ContributionEntity;
+
+  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.created_by)
+  contribution_recorders: ContributionEntity;
 }

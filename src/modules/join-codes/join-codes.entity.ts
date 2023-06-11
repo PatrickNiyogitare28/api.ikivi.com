@@ -21,7 +21,7 @@ export class JoinCodesEntity {
   code: string;
 
   @ManyToOne(() => GroupEntity, (group: GroupEntity) => group.joinCodes)
-  @JoinColumn({ name: 'group' })
+  @Column({ nullable: false })
   group: string;
 
   @Column({ type: 'enum', enum: EStatus, default: EStatus.ACTIVE })

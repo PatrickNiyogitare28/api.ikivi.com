@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { GroupEntity } from "src/modules/group/group.entity";
 import { EStatus } from "src/enums/EStatus";
+import { ContributionEntity } from "../contribution/contribution.entity";
 
 @Entity({name: 'contribution-term'})
 export class ContributionTermEntity {
@@ -26,4 +27,11 @@ export class ContributionTermEntity {
 
   @UpdateDateColumn()
   updated_at: string;
+
+  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.contribution_term, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  contributions: Array<ContributionEntity>;
+
 }

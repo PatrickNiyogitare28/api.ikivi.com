@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateGroupMemberDto } from './dto/group-members.dto';
 import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
+import { EStatus } from 'src/enums/EStatus';
 
 @Injectable()
 export class GroupMembersService {
@@ -15,8 +16,11 @@ export class GroupMembersService {
         ){}
 
         public async addMember(createGroupMemberDto: CreateGroupMemberDto){
+            console.log("created member ....");
+            console.log(createGroupMemberDto);
             try{
                 const existsInGroup = await this.groupMembersRepository.findOne({where: {group: createGroupMemberDto.group, user: createGroupMemberDto.user}});
+                console.log(existsInGroup);
                 if(existsInGroup) throw new BadRequestException("Member already exists in group");
                 await this.groupMembersRepository.save(createGroupMemberDto);
             }
@@ -49,4 +53,14 @@ export class GroupMembersService {
                 message: 'Member deleted successfully'
             }
         }
+
+        public async findGroupMemberExists(user_id: string, group_id: string){
+            const exists = await this.groupMembersRepository.findOne({where: {user: user_id, group: group_id ,membership: EStatus.ACTIVE}})
+            console.log("...exists...")
+            console.log(user_id);
+            console.log(group_id);
+            console.log(exists);
+            if(!exists) throw new NotFoundException("User not a member of the group");
+            return exists;
+        } 
 }

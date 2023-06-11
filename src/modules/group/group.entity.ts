@@ -16,6 +16,7 @@ import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
 import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entity';
 import { GroupMembersEntity } from 'src/modules/group-members/group-members.entity';
 import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
+import { ContributionEntity } from '../contribution/contribution.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -77,5 +78,8 @@ export class GroupEntity {
     members: GroupMembersEntity
 
   @OneToMany(() => ContributionTermEntity, (contributionTerm: ContributionTermEntity) => contributionTerm.group)
-  contributionTerms: ContributionTermEntity
+  contributionTerms: ContributionTermEntity;
+
+  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.group)
+  contributions: ContributionTermEntity;
 }
