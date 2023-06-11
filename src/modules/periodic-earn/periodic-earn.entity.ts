@@ -6,7 +6,7 @@ import { ContributionTermEntity } from '../contribution-term/contribution-term.e
 import { UserEntity } from '../user/users.entity';
 
 @Entity({ name: 'contribution' })
-export class ContributionEntity {
+export class PeriodicEarnEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column({ type: 'decimal',nullable: false, precision: 10, scale: 2, transformer: {
@@ -19,20 +19,20 @@ export class ContributionEntity {
 }})
 amount: Decimal;
 
-@ManyToOne(() => ContributionTermEntity, (contributionTerm: ContributionTermEntity) => contributionTerm.contributions, {eager: true})
+@ManyToOne(() => ContributionTermEntity, (contributionTerm: ContributionTermEntity) => contributionTerm.periodic_earns, {eager: true})
 @Column({nullable: false})
 contribution_term: string
 
 
-@ManyToOne(() => GroupEntity, (group: GroupEntity) => group.contributions, {eager: true})
+@ManyToOne(() => GroupEntity, (group: GroupEntity) => group.periodic_earns, {eager: true})
 @Column({ nullable: false})
 group: string;
 
-@ManyToOne(() => UserEntity, (user: UserEntity) => user.contributions, {eager: true})
+@ManyToOne(() => UserEntity, (user: UserEntity) => user.periodic_earns, {eager: true})
 @Column({ nullable: false})
 user: string;
 
-@ManyToOne(() => UserEntity, (user: UserEntity) => user.contribution_recorders, {eager: true})
+@ManyToOne(() => UserEntity, (user: UserEntity) => user.periodic_earns_recorder, {eager: true})
 @JoinColumn({name: 'created_by'})
 @Column({ nullable: false})
 created_by: string;

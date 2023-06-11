@@ -8,7 +8,6 @@ import { GroupService } from '../group/group.service';
 import { GroupMembersService } from '../group-members/group-members.service';
 import { EStatus } from 'src/enums/EStatus';
 import { ContributionTermService } from '../contribution-term/contribution-term.service';
-import Decimal from 'decimal.js';
 
 @Injectable()
 export class ContributionService {

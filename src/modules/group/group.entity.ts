@@ -17,6 +17,7 @@ import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entit
 import { GroupMembersEntity } from 'src/modules/group-members/group-members.entity';
 import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
 import { ContributionEntity } from '../contribution/contribution.entity';
+import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -82,4 +83,8 @@ export class GroupEntity {
 
   @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.group)
   contributions: ContributionTermEntity;
+
+
+  @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.group)
+  periodic_earns: PeriodicEarnEntity;
 }

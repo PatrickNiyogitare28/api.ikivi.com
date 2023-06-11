@@ -8,12 +8,12 @@ export class GroupMembersEntity {
  @PrimaryGeneratedColumn('uuid')
  id: string;
 
- @ManyToOne(('UserEntity'), (user: UserEntity) => user.groupMemberships)
+ @ManyToOne(('UserEntity'), (user: UserEntity) => user.groupMemberships, {eager: true})
  @Column({nullable: false})
  user: string;
 
 
- @ManyToOne(('GroupEntity'), (group: GroupEntity) => group.members)
+ @ManyToOne(('GroupEntity'), (group: GroupEntity) => group.members, {eager: true})
  @Column({nullable: false})
  group: string;
 

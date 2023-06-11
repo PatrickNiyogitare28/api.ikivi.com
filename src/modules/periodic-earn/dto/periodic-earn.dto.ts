@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-export class AddContributionDto {
+export class AddPeriodicEarnDto {
   @ApiProperty({ required: true })
   @IsInt()
   @IsNotEmpty()
