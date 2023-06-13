@@ -35,4 +35,13 @@ export class GroupMembersController {
         ): Promise<any> {
       return await this.groupMembersService.removeFromGroup(group_id, member_id,req.user.role, req.user.user_id)
     }
+
+    @Get('/user-membership')
+    @ApiResponse({ status: 200, description: 'List memberships', type: GroupMembersEntity })
+    @ApiResponse({ status: 500, description: 'Internal server error' })
+    async getMemberships(
+        @Req() req: any,        
+        ): Promise<any> {
+      return await this.groupMembersService.getUserMemberships(req.user.user_id)
+    }
 }

@@ -83,4 +83,14 @@ export class PeriodicEarnService {
             data: newPeriodicEarn
         }
     }
+
+    public async userEarnHistory(user_id: string, group_id: string){
+        const userExistsInGroup = await this.groupMembersService.findGroupMemberExists(user_id, group_id);
+        if(!userExistsInGroup) throw new BadRequestException("Access denied");
+        const history = await this.periodicEarnRepository.find({where: {user: user_id, group: group_id}});
+        return {
+            success: true,
+            data: history
+        }
+    }
 }

@@ -56,11 +56,15 @@ export class GroupMembersService {
 
         public async findGroupMemberExists(user_id: string, group_id: string){
             const exists = await this.groupMembersRepository.findOne({where: {user: user_id, group: group_id ,membership: EStatus.ACTIVE}})
-            console.log("...exists...")
-            console.log(user_id);
-            console.log(group_id);
-            console.log(exists);
             if(!exists) throw new NotFoundException("User not a member of the group");
             return exists;
         } 
+
+        public async getUserMemberships(user_id: string){
+            const memberships = await this.groupMembersRepository.find({where: {user: user_id}});
+            return {
+                success: true,
+                data: memberships
+            }   
+        }
 }
