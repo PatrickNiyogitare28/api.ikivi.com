@@ -79,4 +79,15 @@ export class PeriodicEarnController {
     ): Promise<any>{
         return await this.periodicEarnService.editStatus(periodicEarn_id,req.user.user_id, req.user.role, status);
     }
+
+    @Get('/user-membership/group/:groupId')
+    @ApiParam({name: 'groupId'})
+    @ApiResponse({ status: 200, description: 'Earn history fetched', type: PeriodicEarnEntity })
+    @ApiResponse({ status: 500, description: 'Internal server error' })
+    async getUserHistory(
+        @Req() req: any,  
+        @Param('groupId') group_id: string      
+        ): Promise<any> {
+      return await this.periodicEarnService.userEarnHistory(req.user.user_id, group_id);
+    }
 }
