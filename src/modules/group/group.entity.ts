@@ -74,16 +74,21 @@ export class GroupEntity {
 
   @OneToMany(
     () => GroupMembersEntity,
-    (groupMembership: GroupMembersEntity) => groupMembership.group
-    )
-    members: GroupMembersEntity
+    (groupMembership: GroupMembersEntity) => groupMembership.group,
+  )
+  members: GroupMembersEntity;
 
-  @OneToMany(() => ContributionTermEntity, (contributionTerm: ContributionTermEntity) => contributionTerm.group)
+  @OneToMany(
+    () => ContributionTermEntity,
+    (contributionTerm: ContributionTermEntity) => contributionTerm.group,
+  )
   contributionTerms: ContributionTermEntity;
 
-  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.group)
+  @OneToMany(
+    () => ContributionEntity,
+    (contribution: ContributionEntity) => contribution.group,
+  )
   contributions: ContributionTermEntity;
-
 
   @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.group)
   periodic_earns: PeriodicEarnEntity;

@@ -1,5 +1,12 @@
 import { EStatus } from 'src/enums/EStatus';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { GroupEntity } from 'src/modules/group/group.entity';
 
 @Entity({ name: 'group_metadata' })

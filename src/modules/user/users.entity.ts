@@ -97,21 +97,29 @@ export class UserEntity {
   joinRequest: JoinRequestsEntity;
 
   @OneToMany(
-  () => GroupMembersEntity,
-  (groupMembership: GroupMembersEntity) => groupMembership.user
+    () => GroupMembersEntity,
+    (groupMembership: GroupMembersEntity) => groupMembership.user,
   )
-  groupMemberships: GroupMembersEntity
+  groupMemberships: GroupMembersEntity;
 
-  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.user)
+  @OneToMany(
+    () => ContributionEntity,
+    (contribution: ContributionEntity) => contribution.user,
+  )
   contributions: ContributionEntity;
 
-  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.created_by)
+  @OneToMany(
+    () => ContributionEntity,
+    (contribution: ContributionEntity) => contribution.created_by,
+  )
   contribution_recorders: ContributionEntity;
 
   @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.user)
   periodic_earns: PeriodicEarnEntity;
 
-  @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.created_by)
+  @OneToMany(
+    () => PeriodicEarnEntity,
+    (earn: PeriodicEarnEntity) => earn.created_by,
+  )
   periodic_earns_recorder: PeriodicEarnEntity;
-  
 }

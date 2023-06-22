@@ -1,4 +1,4 @@
 export class CreateGroupMemberDto {
-    user: string;
-    group: string;
+  user: string;
+  group: string;
 }

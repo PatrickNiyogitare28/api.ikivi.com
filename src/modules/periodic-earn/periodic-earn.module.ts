@@ -14,7 +14,12 @@ import { PeriodicEarnService } from './periodic-earn.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PeriodicEarnEntity, GroupEntity, GroupMembersEntity, ContributionTermEntity]),
+    TypeOrmModule.forFeature([
+      PeriodicEarnEntity,
+      GroupEntity,
+      GroupMembersEntity,
+      ContributionTermEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -23,12 +28,15 @@ import { PeriodicEarnService } from './periodic-earn.service';
     }),
   ],
   controllers: [PeriodicEarnController],
-  providers: [PeriodicEarnService, GroupService, GroupMembersService, ContributionTermService]
+  providers: [
+    PeriodicEarnService,
+    GroupService,
+    GroupMembersService,
+    ContributionTermService,
+  ],
 })
 export class PeriodicEarnModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(PeriodicEarnController)
+    consumer.apply(AuthMiddleware).forRoutes(PeriodicEarnController);
   }
 }

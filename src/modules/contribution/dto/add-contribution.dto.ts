@@ -16,7 +16,7 @@ export class AddContributionDto {
   @IsUUID()
   @IsNotEmpty()
   user: string;
-  
+
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
