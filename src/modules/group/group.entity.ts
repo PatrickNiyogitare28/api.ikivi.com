@@ -18,6 +18,7 @@ import { GroupMembersEntity } from 'src/modules/group-members/group-members.enti
 import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
 import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
+import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -92,4 +93,7 @@ export class GroupEntity {
 
   @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.group)
   periodic_earns: PeriodicEarnEntity;
+
+  @OneToMany(() => LoanRequestsEntity, (loan: LoanRequestsEntity) => loan.group)
+  loan_requests: ContributionTermEntity;
 }

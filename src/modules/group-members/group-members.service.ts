@@ -21,8 +21,6 @@ export class GroupMembersService {
   ) {}
 
   public async addMember(createGroupMemberDto: CreateGroupMemberDto) {
-    console.log('created member ....');
-    console.log(createGroupMemberDto);
     try {
       const existsInGroup = await this.groupMembersRepository.findOne({
         where: {
@@ -30,7 +28,6 @@ export class GroupMembersService {
           user: createGroupMemberDto.user,
         },
       });
-      console.log(existsInGroup);
       if (existsInGroup)
         throw new BadRequestException('Member already exists in group');
       await this.groupMembersRepository.save(createGroupMemberDto);

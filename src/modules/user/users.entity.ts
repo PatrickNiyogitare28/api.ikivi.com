@@ -13,6 +13,7 @@ import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entit
 import { GroupMembersEntity } from '../group-members/group-members.entity';
 import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
+import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -122,4 +123,15 @@ export class UserEntity {
     (earn: PeriodicEarnEntity) => earn.created_by,
   )
   periodic_earns_recorder: PeriodicEarnEntity;
+
+  @OneToMany(() => LoanRequestsEntity, (loan: LoanRequestsEntity) => loan.user)
+  loan_requests: LoanRequestsEntity;
+
+  @OneToMany(
+    () => LoanRequestsEntity,
+    (loan: LoanRequestsEntity) => loan.created_by,
+  )
+  loan_request_recorder: LoanRequestsEntity;
+
+  
 }

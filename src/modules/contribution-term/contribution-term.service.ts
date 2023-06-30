@@ -60,7 +60,6 @@ export class ContributionTermService {
       user_id,
       group_id,
     );
-    console.log(isGroupMember);
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
       groupExists.group_owner.id != user_id &&

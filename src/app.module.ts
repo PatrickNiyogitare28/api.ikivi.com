@@ -27,6 +27,7 @@ import { GroupInterestsModule } from './modules/group-interests/group-interests.
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { PeriodicEarnModule } from './modules/periodic-earn/periodic-earn.module';
 import { LoanModule } from './modules/loan/loan.module';
+import { LoanRequestsModule } from './modules/loan-requests/loan-requests.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { LoanModule } from './modules/loan/loan.module';
     TransactionsModule,
     PeriodicEarnModule,
     LoanModule,
+    LoanRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

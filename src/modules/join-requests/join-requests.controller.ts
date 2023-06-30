@@ -17,7 +17,6 @@ import { ERequestStatus } from 'src/enums/ERequestStatus';
 @ApiTags('Join Requests')
 @ApiBearerAuth()
 @Controller('join-requests')
-@Controller('join-requests')
 export class JoinRequestsController {
   constructor(private readonly joinRequestsService: JoinRequestsService) {}
   @ApiResponse({

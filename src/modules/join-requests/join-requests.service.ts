@@ -37,7 +37,6 @@ export class JoinRequestsService {
       user_id,
       codeExists.id,
     );
-    console.log(requestExists);
     if (requestExists?.status == ERequestStatus.APPROVED)
       throw new BadRequestException('You are already a member');
     if (requestExists?.status == ERequestStatus.PENDING)

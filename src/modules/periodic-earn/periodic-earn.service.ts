@@ -56,8 +56,6 @@ export class PeriodicEarnService {
     user_id: string,
     role: EUserRole,
   ) {
-    console.log(user_id);
-    console.log(role);
     const group = await this.groupService.getGroupById(group_id);
     if (!group) throw new NotFoundException('Group not found');
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
