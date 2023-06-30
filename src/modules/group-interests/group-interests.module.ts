@@ -4,6 +4,6 @@ import { GroupInterestsController } from './group-interests.controller';
 
 @Module({
   providers: [GroupInterestsService],
-  controllers: [GroupInterestsController]
+  controllers: [GroupInterestsController],
 })
 export class GroupInterestsModule {}

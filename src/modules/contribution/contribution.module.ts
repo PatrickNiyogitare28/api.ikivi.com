@@ -14,7 +14,12 @@ import { ContributionTermService } from '../contribution-term/contribution-term.
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ContributionEntity, GroupEntity, GroupMembersEntity, ContributionTermEntity]),
+    TypeOrmModule.forFeature([
+      ContributionEntity,
+      GroupEntity,
+      GroupMembersEntity,
+      ContributionTermEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -23,12 +28,15 @@ import { ContributionTermService } from '../contribution-term/contribution-term.
     }),
   ],
   controllers: [ContributionController],
-  providers: [ContributionService, GroupService, GroupMembersService, ContributionTermService]
+  providers: [
+    ContributionService,
+    GroupService,
+    GroupMembersService,
+    ContributionTermService,
+  ],
 })
 export class ContributionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(ContributionController)
+    consumer.apply(AuthMiddleware).forRoutes(ContributionController);
   }
 }

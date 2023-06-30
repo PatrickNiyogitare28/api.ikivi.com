@@ -12,7 +12,11 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ContributionTermEntity, GroupEntity, GroupMembersEntity]),
+    TypeOrmModule.forFeature([
+      ContributionTermEntity,
+      GroupEntity,
+      GroupMembersEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -21,12 +25,10 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
     }),
   ],
   providers: [ContributionTermService, GroupService, GroupMembersService],
-  controllers: [ContributionTermController]
+  controllers: [ContributionTermController],
 })
 export class ContributionTermModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes(ContributionTermController)
+    consumer.apply(AuthMiddleware).forRoutes(ContributionTermController);
   }
 }

@@ -20,7 +20,7 @@ export class JoinRequestsService {
     private joinRequestRepository: Repository<JoinRequestsEntity>,
     private joinCodesService: JoinCodesService,
     private groupService: GroupService,
-    private groupMembersService: GroupMembersService
+    private groupMembersService: GroupMembersService,
   ) {}
 
   public async requestGroupJoin(
@@ -30,14 +30,13 @@ export class JoinRequestsService {
     const codeExists = await this.joinCodesService.findActiveCode(
       newJoinRequest.code,
     );
-    
+
     if (!codeExists)
       throw new BadRequestException('Code not found or not activated');
     const requestExists = await this._findRequestByUserId(
       user_id,
       codeExists.id,
     );
-    console.log(requestExists);
     if (requestExists?.status == ERequestStatus.APPROVED)
       throw new BadRequestException('You are already a member');
     if (requestExists?.status == ERequestStatus.PENDING)
@@ -77,8 +76,12 @@ export class JoinRequestsService {
       user_role != EUserRole.SYSTEM_ADMIN
     )
       throw new BadRequestException('Access denied');
-      if(status == ERequestStatus.APPROVED) await this.groupMembersService.addMember({user: requestExists.user, group: group.data.id});
-      await this.joinRequestRepository.update(request_id, { status });
+    if (status == ERequestStatus.APPROVED)
+      await this.groupMembersService.addMember({
+        user: requestExists.user,
+        group: group.data.id,
+      });
+    await this.joinRequestRepository.update(request_id, { status });
     return {
       success: true,
       message: `Request  ${status.toLocaleLowerCase()} successfully`,

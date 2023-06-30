@@ -13,6 +13,7 @@ import { JoinRequestsEntity } from 'src/modules/join-requests/join-request.entit
 import { GroupMembersEntity } from '../group-members/group-members.entity';
 import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
+import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -97,21 +98,40 @@ export class UserEntity {
   joinRequest: JoinRequestsEntity;
 
   @OneToMany(
-  () => GroupMembersEntity,
-  (groupMembership: GroupMembersEntity) => groupMembership.user
+    () => GroupMembersEntity,
+    (groupMembership: GroupMembersEntity) => groupMembership.user,
   )
-  groupMemberships: GroupMembersEntity
+  groupMemberships: GroupMembersEntity;
 
-  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.user)
+  @OneToMany(
+    () => ContributionEntity,
+    (contribution: ContributionEntity) => contribution.user,
+  )
   contributions: ContributionEntity;
 
-  @OneToMany(() => ContributionEntity, (contribution: ContributionEntity) => contribution.created_by)
+  @OneToMany(
+    () => ContributionEntity,
+    (contribution: ContributionEntity) => contribution.created_by,
+  )
   contribution_recorders: ContributionEntity;
 
   @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.user)
   periodic_earns: PeriodicEarnEntity;
 
-  @OneToMany(() => PeriodicEarnEntity, (earn: PeriodicEarnEntity) => earn.created_by)
+  @OneToMany(
+    () => PeriodicEarnEntity,
+    (earn: PeriodicEarnEntity) => earn.created_by,
+  )
   periodic_earns_recorder: PeriodicEarnEntity;
+
+  @OneToMany(() => LoanRequestsEntity, (loan: LoanRequestsEntity) => loan.user)
+  loan_requests: LoanRequestsEntity;
+
+  @OneToMany(
+    () => LoanRequestsEntity,
+    (loan: LoanRequestsEntity) => loan.created_by,
+  )
+  loan_request_recorder: LoanRequestsEntity;
+
   
 }

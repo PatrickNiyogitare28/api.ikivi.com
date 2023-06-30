@@ -18,7 +18,7 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
       JoinRequestsEntity,
       JoinCodesEntity,
       GroupEntity,
-      GroupMembersEntity
+      GroupMembersEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -28,7 +28,12 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
     }),
   ],
   controllers: [JoinRequestsController],
-  providers: [JoinRequestsService, JoinCodesService, GroupService, GroupMembersService],
+  providers: [
+    JoinRequestsService,
+    JoinCodesService,
+    GroupService,
+    GroupMembersService,
+  ],
 })
 export class JoinRequestsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
