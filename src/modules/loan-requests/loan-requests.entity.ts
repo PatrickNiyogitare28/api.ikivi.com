@@ -11,61 +11,14 @@ import { Transform } from 'class-transformer';
 export class LoanRequestsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  // @Column({
-  //   type: 'decimal',
-  //   nullable: true,
-  //   precision: 10,
-  //   scale: 2,
-  //   transformer: {
-  //     to(value: Decimal): string {
-  //       return value.toString();
-  //     },
-  //     from(value: any): Decimal {
-  //       return new Decimal(value);
-  //     },
-  //   },
-  // })
-  // amount: Decimal;
+  
   @Column({ name: 'amount', nullable: true, type: 'decimal', precision: 10, scale: 2, default: 0.0, transformer: new DecimalTransformer() })
   @Transform(DecimalToString() as any, { toPlainOnly: true })
   public amount: Decimal;
-  
-  // @Column({
-  //   type: 'decimal',
-  //   nullable: true,
-  //   precision: 10,
-  //   scale: 2,
-  //   transformer: {
-  //     to(value: Decimal): string {
-  //       return value.toString();
-  //     },
-  //     from(value: any): Decimal {
-  //       return new Decimal(value);
-  //     },
-  //   },
-  // })
-  // interest_rate: Decimal;
 
   @Column({ name: 'interest_rate', nullable: true, type: 'decimal', precision: 10, scale: 2, default: 0.0, transformer: new DecimalTransformer() })
   @Transform(DecimalToString() as any, { toPlainOnly: true })
   public interest_rate: Decimal;
-
-  // @Column({
-  //   type: 'decimal',
-  //   nullable: true,
-  //   precision: 10,
-  //   scale: 2,
-  //   transformer: {
-  //     to(value: Decimal): string {
-  //       return value.toString();
-  //     },
-  //     from(value: any): Decimal {
-  //       return new Decimal(value);
-  //     },
-  //   },
-  // })
-  // interest: Decimal;
 
   @Column({ name: 'interest', nullable: true, type: 'decimal', precision: 10, scale: 2, default: 0.0, transformer: new DecimalTransformer() })
   @Transform(DecimalToString() as any, { toPlainOnly: true })
