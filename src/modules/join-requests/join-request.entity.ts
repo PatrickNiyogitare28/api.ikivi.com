@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { GroupEntity } from 'src/modules/group/group.entity';
 import { JoinCodesEntity } from 'src/modules/join-codes/join-codes.entity';
@@ -50,4 +52,10 @@ export class JoinRequestsEntity {
   @JoinColumn({ name: 'user' })
   @Column({ nullable: false })
   user: string;
+  
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
+  loan_due_date: Date;
+  
+  @CreateDateColumn() createdAt?: Date;
+  @UpdateDateColumn() updatedAt?: Date;
 }

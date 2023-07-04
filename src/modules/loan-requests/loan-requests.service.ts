@@ -7,6 +7,7 @@ import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
 import { GroupMembersService } from '../group-members/group-members.service';
 import { ERequestStatus } from 'src/enums/ERequestStatus';
+import { LoanService } from '../loan/loan.service';
 
 @Injectable()
 export class LoanRequestsService {
@@ -14,7 +15,8 @@ export class LoanRequestsService {
         @InjectRepository(LoanRequestsEntity)
         private loanRequestRepository: Repository<LoanRequestsEntity>,
         private readonly groupService: GroupService,
-        private readonly groupMembersService: GroupMembersService
+        private readonly groupMembersService: GroupMembersService,
+        private readonly loanService: LoanService
     ){}
 
     public async create(createDto: CreateLoanRequestDto, user_id: string, role: EUserRole){
@@ -30,11 +32,19 @@ export class LoanRequestsService {
 
         const interest = createDto.amount * createDto.interest_rate as any;
         const loanRequest = await this.loanRequestRepository.save({...createDto, interest, created_by: user_id, request_status: createDto.request_status as ERequestStatus} as any)
-        return {
+
+        if(!loanRequest) throw new BadRequestException("Loan not created");
+        let loan;
+        if(createDto.request_status === ERequestStatus.APPROVED) loan = await this.loanService.create({loan_request: loanRequest.id, updated_by: user_id})
+
+        const responsePayload = {
             success: true,
             message: 'Loan requested successfully',
             data: loanRequest
         }
+    
+        if(loan) responsePayload['loan'] = loan;
+        return responsePayload;
     }
 
     public async updateLoanRequestStatus(request_id: string, new_request_status: ERequestStatus, user_id: string, role: EUserRole){
