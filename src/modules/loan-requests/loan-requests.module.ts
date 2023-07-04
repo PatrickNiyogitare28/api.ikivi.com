@@ -9,10 +9,12 @@ import { GroupMembersService } from '../group-members/group-members.service';
 import { GroupEntity } from '../group/group.entity';
 import { GroupMembersEntity } from '../group-members/group-members.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { LoanEntity } from '../loan/loan.entity';
+import { LoanService } from '../loan/loan.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LoanRequestsEntity, GroupEntity, GroupMembersEntity]),
+    TypeOrmModule.forFeature([LoanRequestsEntity, GroupEntity, GroupMembersEntity, LoanEntity]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -21,7 +23,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [LoanRequestsController],
-  providers: [LoanRequestsService, GroupService, GroupMembersService]
+  providers: [LoanRequestsService, GroupService, GroupMembersService, LoanService]
 })
 export class LoanRequestsModule  implements NestModule {
   configure(consumer: MiddlewareConsumer) {

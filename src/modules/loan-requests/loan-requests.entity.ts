@@ -1,11 +1,12 @@
 import Decimal from 'decimal.js';
 import { ERequestStatus } from 'src/enums/ERequestStatus';
 import { EStatus } from 'src/enums/EStatus';
-import { Column, CreateDateColumn, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad } from 'typeorm';
+import { Column, CreateDateColumn, Double, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad, OneToOne } from 'typeorm';
 import { GroupEntity } from '../group/group.entity';
 import { UserEntity } from '../user/users.entity';
 import { DecimalTransformer, DecimalToString } from 'src/helpers/dicimal.transformer';
 import { Transform } from 'class-transformer';
+import { LoanEntity } from '../loan/loan.entity';
 
 @Entity({ name: 'loan-requests' })
 export class LoanRequestsEntity {
@@ -50,6 +51,10 @@ export class LoanRequestsEntity {
 
   @Column({ type: 'enum', enum: EStatus, default: EStatus.ACTIVE })
   status: EStatus;
+
+  @OneToOne(() => LoanEntity, (loan: LoanEntity) => loan.loan_request)
+  @JoinColumn({ name: 'loan' })
+  loan: LoanEntity;
 
   @CreateDateColumn()
   created_at: string;
