@@ -16,4 +16,7 @@ export class DecimalTransformer implements ValueTransformer {
   }
 }
 
-export const DecimalToString = (decimals: number = 2) => (decimal?: Decimal) => decimal?.toFixed?.(decimals) || decimal;
+export const DecimalToString =
+  (decimals = 2) =>
+  (decimal?: Decimal) =>
+    decimal?.toFixed?.(decimals) || decimal;

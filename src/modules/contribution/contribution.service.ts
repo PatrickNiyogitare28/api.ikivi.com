@@ -27,7 +27,7 @@ export class ContributionService {
     private groupMembersService: GroupMembersService,
     private contributionTermService: ContributionTermService,
     private logsService: LogsService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -35,13 +35,15 @@ export class ContributionService {
       await this.contributionTermService._getContributionTermById(
         dto.contribution_term,
       );
-    const group = await this.groupService.getGroupById((contributionTerm.group as any).id);
+    const group = await this.groupService.getGroupById(
+      (contributionTerm.group as any).id,
+    );
     if (!group) throw new NotFoundException('Group not found');
 
     if (role !== EUserRole.SYSTEM_ADMIN && user_id != group.data.group_owner.id)
       throw new BadRequestException('Access denied');
     // check if the user exists in a group
-   
+
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       (contributionTerm.group as any).id,
@@ -53,14 +55,14 @@ export class ContributionService {
       group: (contributionTerm.group as any).id,
     });
 
-    const userInfo = await this.userService.findUser({id: dto.user});
+    const userInfo = await this.userService.findUser({ id: dto.user });
     const log: CreateLogDto = {
       group_id: (contributionTerm.group as any).id,
       message: `${userInfo.first_name} ${userInfo.last_name} sent contribution`,
       action: EActionType.PERIODIC_CONTRIBUTION_TRANSACTION_SUCCESS,
       actor_id: user_id,
-      data: contribution
-    }
+      data: contribution,
+    };
     await this.logsService.saveLog(log);
     return {
       success: true,

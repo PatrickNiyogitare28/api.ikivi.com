@@ -26,7 +26,7 @@ export class JoinRequestsService {
     private groupService: GroupService,
     private groupMembersService: GroupMembersService,
     private logService: LogsService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   public async requestGroupJoin(
@@ -43,9 +43,9 @@ export class JoinRequestsService {
       user_id,
       codeExists.id,
     );
-    
+
     if (requestExists?.status == ERequestStatus.APPROVED)
-    throw new BadRequestException('You are already a member');
+      throw new BadRequestException('You are already a member');
     if (requestExists?.status == ERequestStatus.PENDING)
       throw new BadRequestException('You already requested to join this group');
     if (requestExists?.status == ERequestStatus.REJECTED)
@@ -57,14 +57,13 @@ export class JoinRequestsService {
         group: codeExists.group,
       });
 
-      
-      const userInfo = await this.userService.findUser({id: user_id});
+      const userInfo = await this.userService.findUser({ id: user_id });
       const newLog: CreateLogDto = {
         group_id: (codeExists.group as any).id,
         message: `${userInfo.first_name} ${userInfo.last_name} requested to join the group`,
         action: EActionType.JOIN_GROUP_REQUEST,
-        actor_id: user_id
-      }
+        actor_id: user_id,
+      };
       await this.logService.saveLog(newLog);
       return {
         success: true,
@@ -86,14 +85,16 @@ export class JoinRequestsService {
       where: { id: request_id },
     });
     if (!requestExists) throw new BadRequestException('Join request not found');
-    const group = await this.groupService.getGroupById(((requestExists.group as any).id));
+    const group = await this.groupService.getGroupById(
+      (requestExists.group as any).id,
+    );
     if (!group) throw new BadRequestException('Group not found');
     if (
       group.data.group_owner.id != user_id &&
       user_role != EUserRole.SYSTEM_ADMIN
     )
       throw new BadRequestException('Access denied');
-    if (status == ERequestStatus.APPROVED){
+    if (status == ERequestStatus.APPROVED) {
       await this.groupMembersService.addMember({
         user: (requestExists.user as any).id,
         group: group.data.id,

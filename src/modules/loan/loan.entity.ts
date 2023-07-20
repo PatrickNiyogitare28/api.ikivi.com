@@ -1,5 +1,14 @@
 import { EStatus } from 'src/enums/EStatus';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { UserEntity } from '../user/users.entity';
 import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 import { ELoanStatus } from 'src/enums/ELoanStatus';
@@ -9,7 +18,11 @@ export class LoanEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => LoanRequestsEntity, (loanRequest: LoanRequestsEntity) => loanRequest.loan, {eager: true})
+  @OneToOne(
+    () => LoanRequestsEntity,
+    (loanRequest: LoanRequestsEntity) => loanRequest.loan,
+    { eager: true },
+  )
   @JoinColumn({ name: 'loan_request' })
   loan_request: LoanRequestsEntity;
 
@@ -22,7 +35,11 @@ export class LoanEntity {
   @Column({ nullable: false })
   updated_by: string;
 
-  @Column({ type: 'enum', enum: ELoanStatus, default: ELoanStatus.PAYMENT_PENDING })
+  @Column({
+    type: 'enum',
+    enum: ELoanStatus,
+    default: ELoanStatus.PAYMENT_PENDING,
+  })
   loan_status: ELoanStatus;
 
   @Column({ type: 'enum', enum: EStatus, default: EStatus.ACTIVE })

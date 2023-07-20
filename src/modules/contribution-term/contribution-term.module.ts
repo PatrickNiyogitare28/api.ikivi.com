@@ -25,7 +25,7 @@ import { AuthService } from '../auth/auth.service';
       GroupMembersEntity,
       LogEntity,
       UserEntity,
-      VerificationEntity
+      VerificationEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -34,8 +34,15 @@ import { AuthService } from '../auth/auth.service';
       },
     }),
   ],
-  providers: [ContributionTermService, GroupService, GroupMembersService, LogsService, 
-    UserService, otpService, AuthService],
+  providers: [
+    ContributionTermService,
+    GroupService,
+    GroupMembersService,
+    LogsService,
+    UserService,
+    otpService,
+    AuthService,
+  ],
   controllers: [ContributionTermController],
 })
 export class ContributionTermModule implements NestModule {

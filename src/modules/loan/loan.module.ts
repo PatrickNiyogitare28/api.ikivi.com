@@ -23,9 +23,9 @@ import { LogEntity } from '../logs/logs.entity';
       LoanEntity,
       GroupEntity,
       GroupMembersEntity,
-      UserEntity, 
+      UserEntity,
       VerificationEntity,
-      LogEntity
+      LogEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -35,9 +35,15 @@ import { LogEntity } from '../logs/logs.entity';
     }),
   ],
   controllers: [LoanController],
-  providers: [LoanService, GroupService, GroupMembersService, LogsService, UserService,
-  otpService, AuthService
-   ],
+  providers: [
+    LoanService,
+    GroupService,
+    GroupMembersService,
+    LogsService,
+    UserService,
+    otpService,
+    AuthService,
+  ],
 })
 export class LoanModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
