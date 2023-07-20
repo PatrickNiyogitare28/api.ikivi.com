@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class loan1687528678823 implements MigrationInterface {
-    name = 'loan1687528678823'
+export class removeLogEntity1689080730489 implements MigrationInterface {
+    name = 'removeLogEntity1689080730489'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "join-codes" ALTER COLUMN "status" SET DEFAULT 'ACTIVE'`);

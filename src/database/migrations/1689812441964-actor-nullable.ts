@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class loanRequestEdit1688115657387 implements MigrationInterface {
-    name = 'loanRequestEdit1688115657387'
+export class actorNullable1689812441964 implements MigrationInterface {
+    name = 'actorNullable1689812441964'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "join-codes" ALTER COLUMN "status" SET DEFAULT 'ACTIVE'`);

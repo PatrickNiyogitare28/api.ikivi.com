@@ -11,6 +11,13 @@ import { ContributionTermService } from '../contribution-term/contribution-term.
 import { PeriodicEarnEntity } from './periodic-earn.entity';
 import { PeriodicEarnController } from './periodic-earn.controller';
 import { PeriodicEarnService } from './periodic-earn.service';
+import { LogEntity } from '../logs/logs.entity';
+import { LogsService } from '../logs/logs.service';
+import { UserService } from '../user/user.service';
+import { otpService } from '../otp/otp.service';
+import { AuthService } from '../auth/auth.service';
+import { UserEntity } from '../user/users.entity';
+import { VerificationEntity } from '../otp/otp.entity';
 
 @Module({
   imports: [
@@ -19,6 +26,9 @@ import { PeriodicEarnService } from './periodic-earn.service';
       GroupEntity,
       GroupMembersEntity,
       ContributionTermEntity,
+      LogEntity,
+      UserEntity,
+      VerificationEntity
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -33,6 +43,10 @@ import { PeriodicEarnService } from './periodic-earn.service';
     GroupService,
     GroupMembersService,
     ContributionTermService,
+    LogsService,
+    UserService,
+    otpService,
+    AuthService
   ],
 })
 export class PeriodicEarnModule implements NestModule {

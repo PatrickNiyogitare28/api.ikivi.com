@@ -1,13 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { GroupMembersController } from './group-members.controller';
-import { GroupMembersService } from './group-members.service';
+import { LogsHistoryController } from './logs-history.controller';
+import { LogsHistoryService } from './logs-history.service';
 import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
-import { GroupMembersEntity } from './group-members.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { GroupService } from '../group/group.service';
-import { GroupEntity } from '../group/group.entity';
 import { LogEntity } from '../logs/logs.entity';
+import { GroupService } from '../group/group.service';
+import { GroupMembersService } from '../group-members/group-members.service';
+import { GroupEntity } from '../group/group.entity';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 import { LogsService } from '../logs/logs.service';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/users.entity';
@@ -17,7 +18,14 @@ import { VerificationEntity } from '../otp/otp.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GroupMembersEntity, GroupEntity, LogEntity, UserEntity, VerificationEntity]),
+    TypeOrmModule.forFeature([
+     LogEntity,
+     GroupEntity,
+     GroupMembersEntity,
+     UserEntity,
+     VerificationEntity,
+
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -25,11 +33,20 @@ import { VerificationEntity } from '../otp/otp.entity';
       },
     }),
   ],
-  controllers: [GroupMembersController],
-  providers: [GroupMembersService, GroupService, LogsService, UserService, otpService, AuthService],
+  controllers: [LogsHistoryController],
+  providers: [
+   LogsHistoryService, 
+   GroupService, 
+   GroupMembersService, 
+   LogsService,
+   UserService,
+   otpService,
+   AuthService,
+
+  ]
 })
-export class GroupMembersModule implements NestModule {
+export class LogsHistoryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(GroupMembersController);
+    consumer.apply(AuthMiddleware).forRoutes(LogsHistoryController);
   }
 }

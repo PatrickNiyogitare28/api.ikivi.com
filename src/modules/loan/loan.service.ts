@@ -8,6 +8,9 @@ import { GroupMembersService } from '../group-members/group-members.service';
 import { EUserRole } from 'src/enums/EUserRole';
 import { ELoanStatus } from 'src/enums/ELoanStatus';
 import { GroupEntity } from '../group/group.entity';
+import { LogsService } from '../logs/logs.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { EActionType } from 'src/enums/EActionTypes';
 
 @Injectable()
 export class LoanService {
@@ -15,11 +18,13 @@ export class LoanService {
     @InjectRepository(LoanEntity)
     private readonly loanRepository: Repository<LoanEntity>,
     private readonly groupService: GroupService,
-    private readonly groupMembersService: GroupMembersService
+    private readonly groupMembersService: GroupMembersService,
+    private readonly logsService: LogsService
   ) {}
 
   public async create(newLoanDto: CreateLoanDto) {
     const loan = await this.loanRepository.save(newLoanDto as any);
+
     return loan;
   }
 
@@ -33,6 +38,7 @@ export class LoanService {
     const loans = await this.loanRepository.find({
       where: { loan_request: { group: group_id } }, relations: ['loan_request']
     });
+
     return {
       success: true,
       data: loans,
@@ -97,6 +103,19 @@ export class LoanService {
     if(role != EUserRole.SYSTEM_ADMIN && group.group_owner.id != user_id) throw new BadGatewayException("Access denied");
 
     const newLoan = await this.loanRepository.update(loan_id, {loan_status})
+    const action = (loan_status === ELoanStatus.CANCELED) ? EActionType.LOAN_CANCELED :
+                   (loan_status === ELoanStatus.PAID) ? EActionType.LOAN_PAID :
+                   (loan_status === ELoanStatus.DELAYED) ? EActionType.LOAN_DELAYED :
+                   (loan_status === ELoanStatus.PARTIALLY_PAID) ? EActionType.LOAN_PARTIALLY_PAID :
+                    EActionType.LOAN_PAYMENT_PENDING;
+
+    const newLog: CreateLogDto = {
+      group_id: group.id,
+      message: `Loan ${loan_status.toLowerCase()}`,
+      action,
+      actor_id: user_id
+    }
+    await this.logsService.saveLog(newLog);
 
     return {
       success: true,

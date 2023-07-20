@@ -28,6 +28,8 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
 import { PeriodicEarnModule } from './modules/periodic-earn/periodic-earn.module';
 import { LoanModule } from './modules/loan/loan.module';
 import { LoanRequestsModule } from './modules/loan-requests/loan-requests.module';
+import { LogsModule } from './modules/logs/logs.module';
+import { LogsHistoryModule } from './modules/logs-history/logs-history.module';
 
 @Module({
   imports: [
@@ -60,6 +62,8 @@ import { LoanRequestsModule } from './modules/loan-requests/loan-requests.module
     PeriodicEarnModule,
     LoanModule,
     LoanRequestsModule,
+    LogsModule,
+    LogsHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

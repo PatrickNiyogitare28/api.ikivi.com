@@ -96,4 +96,4 @@ export class GroupEntity {
 
   @OneToMany(() => LoanRequestsEntity, (loan: LoanRequestsEntity) => loan.group)
   loan_requests: ContributionTermEntity;
-}
+  }

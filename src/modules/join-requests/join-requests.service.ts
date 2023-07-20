@@ -12,6 +12,10 @@ import { ERequestStatus } from 'src/enums/ERequestStatus';
 import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
 import { GroupMembersService } from '../group-members/group-members.service';
+import { LogsService } from '../logs/logs.service';
+import { UserService } from '../user/user.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { EActionType } from 'src/enums/EActionTypes';
 
 @Injectable()
 export class JoinRequestsService {
@@ -21,6 +25,8 @@ export class JoinRequestsService {
     private joinCodesService: JoinCodesService,
     private groupService: GroupService,
     private groupMembersService: GroupMembersService,
+    private logService: LogsService,
+    private userService: UserService
   ) {}
 
   public async requestGroupJoin(
@@ -37,8 +43,9 @@ export class JoinRequestsService {
       user_id,
       codeExists.id,
     );
+    
     if (requestExists?.status == ERequestStatus.APPROVED)
-      throw new BadRequestException('You are already a member');
+    throw new BadRequestException('You are already a member');
     if (requestExists?.status == ERequestStatus.PENDING)
       throw new BadRequestException('You already requested to join this group');
     if (requestExists?.status == ERequestStatus.REJECTED)
@@ -49,6 +56,16 @@ export class JoinRequestsService {
         user: user_id,
         group: codeExists.group,
       });
+
+      
+      const userInfo = await this.userService.findUser({id: user_id});
+      const newLog: CreateLogDto = {
+        group_id: (codeExists.group as any).id,
+        message: `${userInfo.first_name} ${userInfo.last_name} requested to join the group`,
+        action: EActionType.JOIN_GROUP_REQUEST,
+        actor_id: user_id
+      }
+      await this.logService.saveLog(newLog);
       return {
         success: true,
         message: `You successfully requested to join group`,
@@ -69,18 +86,19 @@ export class JoinRequestsService {
       where: { id: request_id },
     });
     if (!requestExists) throw new BadRequestException('Join request not found');
-    const group = await this.groupService.getGroupById(requestExists.group);
+    const group = await this.groupService.getGroupById(((requestExists.group as any).id));
     if (!group) throw new BadRequestException('Group not found');
     if (
       group.data.group_owner.id != user_id &&
       user_role != EUserRole.SYSTEM_ADMIN
     )
       throw new BadRequestException('Access denied');
-    if (status == ERequestStatus.APPROVED)
+    if (status == ERequestStatus.APPROVED){
       await this.groupMembersService.addMember({
-        user: requestExists.user,
+        user: (requestExists.user as any).id,
         group: group.data.id,
       });
+    }
     await this.joinRequestRepository.update(request_id, { status });
     return {
       success: true,

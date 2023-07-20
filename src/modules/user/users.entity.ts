@@ -139,6 +139,4 @@ export class UserEntity {
     (loan: LoanEntity) => loan.updated_by,
   )
   loan_updater: LoanEntity;
-
-  
 }

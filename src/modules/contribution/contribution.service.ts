@@ -12,6 +12,11 @@ import { GroupService } from '../group/group.service';
 import { GroupMembersService } from '../group-members/group-members.service';
 import { EStatus } from 'src/enums/EStatus';
 import { ContributionTermService } from '../contribution-term/contribution-term.service';
+import { LogsService } from '../logs/logs.service';
+import { LogEntity } from '../logs/logs.entity';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { EActionType } from 'src/enums/EActionTypes';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ContributionService {
@@ -21,6 +26,8 @@ export class ContributionService {
     private groupService: GroupService,
     private groupMembersService: GroupMembersService,
     private contributionTermService: ContributionTermService,
+    private logsService: LogsService,
+    private userService: UserService
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -28,22 +35,33 @@ export class ContributionService {
       await this.contributionTermService._getContributionTermById(
         dto.contribution_term,
       );
-    const group = await this.groupService.getGroupById(contributionTerm.group);
+    const group = await this.groupService.getGroupById((contributionTerm.group as any).id);
     if (!group) throw new NotFoundException('Group not found');
 
     if (role !== EUserRole.SYSTEM_ADMIN && user_id != group.data.group_owner.id)
       throw new BadRequestException('Access denied');
     // check if the user exists in a group
+   
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
-      contributionTerm.group,
+      (contributionTerm.group as any).id,
     );
 
     const contribution = await this.contributionRepository.save({
       ...dto,
       created_by: user_id,
-      group: group.data.id,
+      group: (contributionTerm.group as any).id,
     });
+
+    const userInfo = await this.userService.findUser({id: dto.user});
+    const log: CreateLogDto = {
+      group_id: (contributionTerm.group as any).id,
+      message: `${userInfo.first_name} ${userInfo.last_name} sent contribution`,
+      action: EActionType.PERIODIC_CONTRIBUTION_TRANSACTION_SUCCESS,
+      actor_id: user_id,
+      data: contribution
+    }
+    await this.logsService.saveLog(log);
     return {
       success: true,
       message: 'Contribution saved successfully',
