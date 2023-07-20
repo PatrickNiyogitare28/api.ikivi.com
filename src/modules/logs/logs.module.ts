@@ -17,9 +17,9 @@ import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
     }),
   ],
   controllers: [LogsController],
-  providers: [LogsService]
+  providers: [LogsService],
 })
-export class LogsModule  implements NestModule {
+export class LogsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes(LogsController);
   }

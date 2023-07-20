@@ -21,8 +21,14 @@ import { LogEntity } from '../logs/logs.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LoanRequestsEntity, GroupEntity, GroupMembersEntity, LoanEntity,
-     VerificationEntity, UserEntity, LogEntity
+    TypeOrmModule.forFeature([
+      LoanRequestsEntity,
+      GroupEntity,
+      GroupMembersEntity,
+      LoanEntity,
+      VerificationEntity,
+      UserEntity,
+      LogEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -32,14 +38,18 @@ import { LogEntity } from '../logs/logs.entity';
     }),
   ],
   controllers: [LoanRequestsController],
-  providers: [LoanRequestsService, GroupService, GroupMembersService, LoanService,
-  LogsService,
-  UserService,
-  AuthService,
-  otpService
-  ]
+  providers: [
+    LoanRequestsService,
+    GroupService,
+    GroupMembersService,
+    LoanService,
+    LogsService,
+    UserService,
+    AuthService,
+    otpService,
+  ],
 })
-export class LoanRequestsModule  implements NestModule {
+export class LoanRequestsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes(LoanRequestsController);
   }

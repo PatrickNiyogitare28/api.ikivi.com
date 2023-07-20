@@ -17,7 +17,13 @@ import { VerificationEntity } from '../otp/otp.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GroupMembersEntity, GroupEntity, LogEntity, UserEntity, VerificationEntity]),
+    TypeOrmModule.forFeature([
+      GroupMembersEntity,
+      GroupEntity,
+      LogEntity,
+      UserEntity,
+      VerificationEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
@@ -26,7 +32,14 @@ import { VerificationEntity } from '../otp/otp.entity';
     }),
   ],
   controllers: [GroupMembersController],
-  providers: [GroupMembersService, GroupService, LogsService, UserService, otpService, AuthService],
+  providers: [
+    GroupMembersService,
+    GroupService,
+    LogsService,
+    UserService,
+    otpService,
+    AuthService,
+  ],
 })
 export class GroupMembersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

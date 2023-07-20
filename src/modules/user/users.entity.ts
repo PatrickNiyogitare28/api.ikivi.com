@@ -134,9 +134,6 @@ export class UserEntity {
   )
   loan_request_recorder: LoanRequestsEntity;
 
-  @OneToMany(
-    () => LoanEntity,
-    (loan: LoanEntity) => loan.updated_by,
-  )
+  @OneToMany(() => LoanEntity, (loan: LoanEntity) => loan.updated_by)
   loan_updater: LoanEntity;
 }

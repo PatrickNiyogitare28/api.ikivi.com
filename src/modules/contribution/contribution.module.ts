@@ -28,7 +28,7 @@ import { VerificationEntity } from '../otp/otp.entity';
       ContributionTermEntity,
       LogEntity,
       UserEntity,
-      VerificationEntity
+      VerificationEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -46,7 +46,7 @@ import { VerificationEntity } from '../otp/otp.entity';
     LogsService,
     UserService,
     otpService,
-    AuthService
+    AuthService,
   ],
 })
 export class ContributionModule implements NestModule {

@@ -28,7 +28,7 @@ import { LogEntity } from '../logs/logs.entity';
       GroupMembersEntity,
       UserEntity,
       VerificationEntity,
-      LogEntity
+      LogEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -46,7 +46,7 @@ import { LogEntity } from '../logs/logs.entity';
     LogsService,
     UserService,
     otpService,
-    AuthService
+    AuthService,
   ],
 })
 export class JoinRequestsModule implements NestModule {
