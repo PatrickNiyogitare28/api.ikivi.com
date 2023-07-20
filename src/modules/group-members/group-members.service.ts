@@ -11,6 +11,10 @@ import { CreateGroupMemberDto } from './dto/group-members.dto';
 import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
 import { EStatus } from 'src/enums/EStatus';
+import { LogsService } from '../logs/logs.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { UserService } from '../user/user.service';
+import { EActionType } from 'src/enums/EActionTypes';
 
 @Injectable()
 export class GroupMembersService {
@@ -18,6 +22,8 @@ export class GroupMembersService {
     @InjectRepository(GroupMembersEntity)
     private groupMembersRepository: Repository<GroupMembersEntity>,
     private groupService: GroupService,
+    private logsService: LogsService,
+    private userService: UserService
   ) {}
 
   public async addMember(createGroupMemberDto: CreateGroupMemberDto) {
@@ -30,7 +36,15 @@ export class GroupMembersService {
       });
       if (existsInGroup)
         throw new BadRequestException('Member already exists in group');
-      await this.groupMembersRepository.save(createGroupMemberDto);
+      const membership = await this.groupMembersRepository.save(createGroupMemberDto);
+      const userInfo = await this.userService.findUser({id: createGroupMemberDto.user});
+      const newLogDto: CreateLogDto = {
+        group_id: createGroupMemberDto.group,
+        message: `${userInfo.first_name} ${userInfo.last_name} Joined group`,
+        action: EActionType.JOINED_GROUP,
+        data: membership
+      }
+      await this.logsService.saveLog(newLogDto)
     } catch (e) {
       throw new InternalServerErrorException(e.message);
     }
@@ -76,6 +90,16 @@ export class GroupMembersService {
     });
     if (!isMember) throw new NotFoundException('User not found in this group');
     await this.groupMembersRepository.delete(isMember.id);
+
+    const userInfo = await this.userService.findUser({id: isMember.user});
+    const newLogDto: CreateLogDto = {
+      group_id: group_id,
+      message: `${userInfo.first_name} ${userInfo.last_name} removed from group`,
+      action: EActionType.JOINED_GROUP,
+      data: isMember
+    }
+    await this.logsService.saveLog(newLogDto)
+
     return {
       success: true,
       message: 'Member deleted successfully',
@@ -86,8 +110,9 @@ export class GroupMembersService {
     const exists = await this.groupMembersRepository.findOne({
       where: { user: user_id, group: group_id, membership: EStatus.ACTIVE },
     });
-    if (!exists) throw new NotFoundException('User not a member of the group');
-    return exists;
+    const group = await this.groupService.findGroupById(group_id);
+    if (!exists && group.group_owner.id !== user_id) throw new NotFoundException('User not a member of the group');
+    return (exists) ? exists : true;
   }
 
   public async getUserMemberships(user_id: string) {

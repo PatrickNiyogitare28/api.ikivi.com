@@ -12,6 +12,10 @@ import { EUserRole } from 'src/enums/EUserRole';
 import { GroupService } from '../group/group.service';
 import { EStatus } from 'src/enums/EStatus';
 import { GroupMembersService } from '../group-members/group-members.service';
+import { LogsService } from '../logs/logs.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { EActionType } from 'src/enums/EActionTypes';
+
 
 @Injectable()
 export class ContributionTermService {
@@ -20,6 +24,7 @@ export class ContributionTermService {
     private readonly contributionTermRepository: Repository<ContributionTermEntity>,
     private readonly groupService: GroupService,
     private readonly groupMembersService: GroupMembersService,
+    private readonly logsService: LogsService
   ) {}
 
   public async openContributionTerm(
@@ -40,9 +45,17 @@ export class ContributionTermService {
       groupExists.group_owner.id != user_id &&
       !isGroupMember
     )
-      throw new BadRequestException('Access denied to perform this action');
+    throw new BadRequestException('Access denied to perform this action');
     await this._disableOtherTerms(group);
     const term = await this.contributionTermRepository.save(createTermDto);
+    const newLog: CreateLogDto = {
+      group_id: createTermDto.group,
+      message: `${createTermDto?.name || 'Contribution'} term opened`,
+      action: EActionType.CONTRIBUTION_TERM_OPENED,
+      actor_id: user_id,
+      data: term
+    }
+    await this.logsService.saveLog(newLog);
     return {
       success: true,
       data: term,

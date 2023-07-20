@@ -8,6 +8,11 @@ import { GroupService } from '../group/group.service';
 import { GroupMembersService } from '../group-members/group-members.service';
 import { ERequestStatus } from 'src/enums/ERequestStatus';
 import { LoanService } from '../loan/loan.service';
+import { LogsService } from '../logs/logs.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { UserService } from '../user/user.service';
+import { EActionType } from 'src/enums/EActionTypes';
+import { ELoanStatus } from 'src/enums/ELoanStatus';
 
 @Injectable()
 export class LoanRequestsService {
@@ -16,7 +21,9 @@ export class LoanRequestsService {
         private loanRequestRepository: Repository<LoanRequestsEntity>,
         private readonly groupService: GroupService,
         private readonly groupMembersService: GroupMembersService,
-        private readonly loanService: LoanService
+        private readonly loanService: LoanService,
+        private readonly logsService: LogsService,
+        private readonly userService: UserService
     ){}
 
     public async create(createDto: CreateLoanRequestDto, user_id: string, role: EUserRole){
@@ -36,7 +43,16 @@ export class LoanRequestsService {
         if(!loanRequest) throw new BadRequestException("Loan not created");
         let loan;
         if(createDto.request_status === ERequestStatus.APPROVED) loan = await this.loanService.create({loan_request: loanRequest.id, updated_by: user_id})
-
+        
+        const userInfo = await this.userService.findUser({id: createDto.user});
+        const newLog: CreateLogDto = {
+            group_id: createDto.group,
+            message: `${userInfo.first_name} ${userInfo.last_name} requested loan`,
+            action: EActionType.LOAN_REQUESTED,
+            actor_id: user_id,
+            data: loanRequest
+        }
+        await this.logsService.saveLog(newLog);
         const responsePayload = {
             success: true,
             message: 'Loan requested successfully',
@@ -58,6 +74,21 @@ export class LoanRequestsService {
         if(!isGroupMember && role != EUserRole.SYSTEM_ADMIN && group.group_owner.id != user_id) throw new BadGatewayException("Access denied");
 
         const newRequest = await this.loanRequestRepository.update(request_id, {request_status: new_request_status});
+       
+        const userInfo = await this.userService.findUser({id: (requestExists.user as any).id});
+        const action = (new_request_status === ERequestStatus.APPROVED) ? EActionType.LOAN_APPROVED :
+                       (new_request_status === ERequestStatus.CANCELED) ? EActionType.LOAN_CANCELED :
+                       (new_request_status === ERequestStatus.REJECTED) ? EActionType.LOAN_REJECTED :
+                       null;
+
+        const newLog: CreateLogDto = {
+            group_id: (requestExists.group as any).id,
+            message: `${userInfo.first_name} ${userInfo.last_name} loan ${new_request_status.toLowerCase()}`,
+            action,
+            actor_id: user_id,
+            data: requestExists
+        }
+        await this.logsService.saveLog(newLog);
         return {
             success: true,
             message: 'Request status updated successfully',

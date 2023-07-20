@@ -11,6 +11,13 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
 import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
 import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
 import { ContributionTermService } from '../contribution-term/contribution-term.service';
+import { LogEntity } from '../logs/logs.entity';
+import { LogsService } from '../logs/logs.service';
+import { UserService } from '../user/user.service';
+import { otpService } from '../otp/otp.service';
+import { AuthService } from '../auth/auth.service';
+import { UserEntity } from '../user/users.entity';
+import { VerificationEntity } from '../otp/otp.entity';
 
 @Module({
   imports: [
@@ -19,6 +26,9 @@ import { ContributionTermService } from '../contribution-term/contribution-term.
       GroupEntity,
       GroupMembersEntity,
       ContributionTermEntity,
+      LogEntity,
+      UserEntity,
+      VerificationEntity
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -33,6 +43,10 @@ import { ContributionTermService } from '../contribution-term/contribution-term.
     GroupService,
     GroupMembersService,
     ContributionTermService,
+    LogsService,
+    UserService,
+    otpService,
+    AuthService
   ],
 })
 export class ContributionModule implements NestModule {

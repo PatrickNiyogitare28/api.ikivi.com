@@ -15,7 +15,6 @@ import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
 import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 import { LoanEntity } from '../loan/loan.entity';
-import { LogsEntity } from '../logs/logs.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -140,12 +139,4 @@ export class UserEntity {
     (loan: LoanEntity) => loan.updated_by,
   )
   loan_updater: LoanEntity;
-
-  @OneToMany(
-    () => LogsEntity,
-    (logs: LogsEntity) => logs.actor,
-  )
-  actor: LogsEntity;
-
-  
 }

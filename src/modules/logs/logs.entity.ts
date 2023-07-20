@@ -1,26 +1,22 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity } from '../user/users.entity';
-import { GroupEntity } from '../group/group.entity';
 import { EActionType } from 'src/enums/EActionTypes';
 
-@Entity({ name: 'logs' })
-export class LogsEntity {
+@Entity({ name: 'log' })
+export class LogEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => ((group: GroupEntity) => group.logs))
-  @Column()
-  group: string
+  @Column({nullable: false})
+  group_id: string
 
-  @Column()
+  @Column({nullable: false})
   message: string;
 
   @Column({type: 'enum', enum: EActionType})
   action: EActionType;
 
-  @ManyToOne(() => ((user: UserEntity) => user.actor))
-  @Column()
-  actor: string;
+  @Column({nullable: true})
+  actor_id: string;
 
   @Column('jsonb', { nullable: true, default: {} })
   data: string;
