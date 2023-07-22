@@ -19,7 +19,6 @@ export class LogsHistoryController {
   @ApiParam({ name: 'id', description: 'Group id' })
   @Get('/group/:id')
   async getGroupLogsHistory(@Param('id') group_id: string, @Req() req: any) {
-    console.log('controller: ' + req.user);
     return await this.logsHistoryService.getGroupHistory(
       group_id,
       req.user.user_id,

@@ -24,7 +24,6 @@ export class LogsHistoryService {
     user_id: string,
     role: EUserRole,
   ) {
-    console.log(user_id + ' ' + role);
     const group = await this.groupService.findGroupById(group_id);
     if (!group) throw new NotFoundException('Group not found');
 
@@ -32,7 +31,6 @@ export class LogsHistoryService {
       user_id,
       group_id,
     );
-    console.log(isGroupMember);
 
     if (!isGroupMember && role !== EUserRole.SYSTEM_ADMIN)
       throw new BadRequestException('Access denied');
