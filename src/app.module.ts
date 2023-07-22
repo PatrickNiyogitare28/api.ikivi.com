@@ -30,6 +30,7 @@ import { LoanModule } from './modules/loan/loan.module';
 import { LoanRequestsModule } from './modules/loan-requests/loan-requests.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { LogsHistoryModule } from './modules/logs-history/logs-history.module';
+import { AppLoggerMiddleware } from './common/middlewares/logs.middleware';
 
 @Module({
   imports: [
@@ -71,6 +72,8 @@ import { LogsHistoryModule } from './modules/logs-history/logs-history.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply(AppLoggerMiddleware)
+      .forRoutes('*')
       .apply(AuthMiddleware)
       .forRoutes({ path: '*/profile', method: RequestMethod.GET });
   }
