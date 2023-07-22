@@ -12,6 +12,10 @@ import { EStatus } from 'src/enums/EStatus';
 import { ContributionTermService } from '../contribution-term/contribution-term.service';
 import { PeriodicEarnEntity } from './periodic-earn.entity';
 import { AddPeriodicEarnDto } from './dto/periodic-earn.dto';
+import { UserService } from '../user/user.service';
+import { CreateLogDto } from '../logs/dto/log.dto';
+import { EActionType } from 'src/enums/EActionTypes';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class PeriodicEarnService {
@@ -21,6 +25,8 @@ export class PeriodicEarnService {
     private groupService: GroupService,
     private groupMembersService: GroupMembersService,
     private contributionTermService: ContributionTermService,
+    private userService: UserService,
+    private logsService: LogsService,
   ) {}
 
   public async add(dto: AddPeriodicEarnDto, user_id: string, role: EUserRole) {
@@ -28,7 +34,9 @@ export class PeriodicEarnService {
       await this.contributionTermService._getContributionTermById(
         dto.contribution_term,
       );
-    const group = await this.groupService.getGroupById(contributionTerm.group);
+    const group = await this.groupService.getGroupById(
+      (contributionTerm.group as any).id,
+    );
     if (!group) throw new NotFoundException('Group not found');
 
     if (role !== EUserRole.SYSTEM_ADMIN && user_id != group.data.group_owner.id)
@@ -36,7 +44,7 @@ export class PeriodicEarnService {
     // check if the user exists in a group
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
-      contributionTerm.group,
+      group.data.id,
     );
 
     const periodicEarn = await this.periodicEarnRepository.save({
@@ -44,6 +52,21 @@ export class PeriodicEarnService {
       created_by: user_id,
       group: group.data.id,
     });
+    const userInfo = await this.userService.findUser({ id: dto.user });
+    const newLog: CreateLogDto = {
+      group_id: group.data.id,
+      message:
+        dto?.notes ||
+        `${userInfo.first_name} ${userInfo.last_name} received periodic earn`,
+      action: EActionType.RECEIVED_PERIODIC_EARN,
+      actor_id: user_id,
+      data: {
+        user: userInfo,
+        periodicEarn,
+        contributionTerm,
+      },
+    };
+    await this.logsService.saveLog(newLog);
     return {
       success: true,
       message: 'Periodic earn saved successfully',
