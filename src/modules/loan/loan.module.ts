@@ -46,7 +46,7 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
     UserService,
     otpService,
     AuthService,
-    GroupInfoService
+    GroupInfoService,
   ],
 })
 export class LoanModule implements NestModule {

@@ -18,7 +18,7 @@ export class GroupService {
   constructor(
     @InjectRepository(GroupEntity)
     private groupRepository: Repository<GroupEntity>,
-    private groupMembersService: GroupMembersService
+    private groupMembersService: GroupMembersService,
   ) {}
 
   public async register(newGroupDto: CreateGroupDto, owner_id: string) {
@@ -28,7 +28,10 @@ export class GroupService {
         group_owner: owner_id,
       } as any);
       // make admin a member
-      await this.groupMembersService.addMember({user: owner_id, group: group.id})
+      await this.groupMembersService.addMember({
+        user: owner_id,
+        group: group.id,
+      });
       return {
         success: true,
         message: 'Group registered successfully',

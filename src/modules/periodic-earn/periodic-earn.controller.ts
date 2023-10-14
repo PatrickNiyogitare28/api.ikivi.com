@@ -123,7 +123,7 @@ export class PeriodicEarnController {
     return await this.periodicEarnService.userEarnHistory(
       req.user.user_id,
       group_id,
-      req.user.role
+      req.user.role,
     );
   }
 }

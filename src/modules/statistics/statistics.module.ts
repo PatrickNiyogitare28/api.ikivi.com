@@ -32,7 +32,7 @@ import { GroupInfoService } from '../group-info/group-info.service';
       LogEntity,
       UserEntity,
       VerificationEntity,
-      GroupInfoEntity
+      GroupInfoEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -43,8 +43,8 @@ import { GroupInfoService } from '../group-info/group-info.service';
   ],
   controllers: [StatisticsController],
   providers: [
-    StatisticsService, 
-    GroupService, 
+    StatisticsService,
+    GroupService,
     ContributionService,
     GroupMembersService,
     ContributionTermService,
@@ -52,12 +52,11 @@ import { GroupInfoService } from '../group-info/group-info.service';
     UserService,
     otpService,
     AuthService,
-    GroupInfoService
-  ]
+    GroupInfoService,
+  ],
 })
 export class StatisticsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes(StatisticsController);
   }
 }
-

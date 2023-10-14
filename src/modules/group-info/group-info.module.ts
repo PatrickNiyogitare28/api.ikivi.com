@@ -5,11 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupInfoEntity } from './grouup-interests.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      GroupInfoEntity
-    ])
-  ],
+  imports: [TypeOrmModule.forFeature([GroupInfoEntity])],
   providers: [GroupInfoService],
   controllers: [GroupInfoController],
 })

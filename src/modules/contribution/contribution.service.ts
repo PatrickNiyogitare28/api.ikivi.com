@@ -30,7 +30,7 @@ export class ContributionService {
     private contributionTermService: ContributionTermService,
     private logsService: LogsService,
     private userService: UserService,
-    private groupInfoService: GroupInfoService
+    private groupInfoService: GroupInfoService,
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -50,7 +50,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       (contributionTerm.group as any).id,
-      role
+      role,
     );
 
     const contribution = await this.contributionRepository.save({
@@ -71,8 +71,8 @@ export class ContributionService {
     await this.groupInfoService.addOnGroupCapital({
       group: group.data.id,
       updated_by: user_id,
-      amount: dto.amount
-    })
+      amount: dto.amount,
+    });
     return {
       success: true,
       message: 'Contribution saved successfully',
@@ -90,7 +90,7 @@ export class ContributionService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
-      role
+      role,
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -123,7 +123,7 @@ export class ContributionService {
     const existsInGroup = await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
-      role
+      role,
     );
 
     if (
@@ -157,7 +157,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
-      role
+      role,
     );
     const newContribution = await this.contributionRepository.update(
       contribution_id,
@@ -170,7 +170,11 @@ export class ContributionService {
     };
   }
 
-  public async getContributionInfo(group: string, user: string, role: EUserRole) {
+  public async getContributionInfo(
+    group: string,
+    user: string,
+    role: EUserRole,
+  ) {
     const groupExists = await this.groupService.findGroupById(group);
     if (!groupExists) throw new NotFoundException('Group not found');
 
@@ -186,12 +190,8 @@ export class ContributionService {
     }
 
     let myTotalContribution = 0;
-    console.log("before finding my contribution this is the total: ")
     for (const contribution of groupContributions) {
-       console.log(contribution.user);
-       console.log(user)
       if ((contribution.user as any as UserEntity).id == user) {
-        console.log("found my contribution");
         myTotalContribution += parseInt(contribution.amount.toString());
       }
     }
@@ -206,5 +206,4 @@ export class ContributionService {
       myShare: myShare.toFixed(1),
     };
   }
-
 }

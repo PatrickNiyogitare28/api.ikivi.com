@@ -96,7 +96,7 @@ export class ContributionController {
     return await this.contributionService.getContributionInfo(
       group_id,
       req.user.user_id,
-      req.user.role
+      req.user.role,
     );
   }
 

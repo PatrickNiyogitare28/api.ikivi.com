@@ -43,7 +43,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&
@@ -55,11 +55,12 @@ export class LoanRequestsService {
     const userIsMember = await this.groupMembersService.findGroupMemberExists(
       createDto.user,
       group.id,
-      role
+      role,
     );
     if (!userIsMember) throw new BadRequestException('User is not a member');
 
-    const interest = (createDto.amount * createDto.interest_rate) / 100 as any;
+    const interest = ((createDto.amount * createDto.interest_rate) /
+      100) as any;
     const loanRequest = await this.loanRequestRepository.save({
       ...createDto,
       interest,
@@ -70,7 +71,7 @@ export class LoanRequestsService {
     if (!loanRequest) throw new BadRequestException('Loan not created');
     const userInfo = await this.userService.findUser({ id: createDto.user });
     let loan;
-    if (createDto.request_status === ERequestStatus.APPROVED){
+    if (createDto.request_status === ERequestStatus.APPROVED) {
       const newLoanLog: CreateLogDto = {
         group_id: createDto.group,
         message: `${userInfo.first_name} ${userInfo.last_name} received a loan`,
@@ -84,7 +85,7 @@ export class LoanRequestsService {
         log: newLoanLog,
         group_id: createDto.group,
         loan_amount: createDto.amount,
-        amount_topay: (createDto.amount + interest)
+        amount_topay: createDto.amount + interest,
       });
     }
 
@@ -125,7 +126,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&
@@ -134,8 +135,11 @@ export class LoanRequestsService {
     )
       throw new BadGatewayException('Access denied');
 
-    if(new_request_status === ERequestStatus.APPROVED && requestExists.request_status === ERequestStatus.APPROVED){
-      return  new BadRequestException("Loan Status not updated")
+    if (
+      new_request_status === ERequestStatus.APPROVED &&
+      requestExists.request_status === ERequestStatus.APPROVED
+    ) {
+      return new BadRequestException('Loan Status not updated');
     }
     const newRequest = await this.loanRequestRepository.update(request_id, {
       request_status: new_request_status,
@@ -144,7 +148,7 @@ export class LoanRequestsService {
       id: (requestExists.user as any).id,
     });
 
-    if(new_request_status === ERequestStatus.APPROVED ){
+    if (new_request_status === ERequestStatus.APPROVED) {
       const newLoanLog: CreateLogDto = {
         group_id: (requestExists.group as any).id,
         message: `${userInfo.first_name} ${userInfo.last_name} received a loan`,
@@ -158,11 +162,10 @@ export class LoanRequestsService {
         log: newLoanLog,
         group_id: (requestExists.group as any).id,
         loan_amount: requestExists.amount,
-        amount_topay: (requestExists.amount.add(requestExists.interest))
+        amount_topay: requestExists.amount.add(requestExists.interest),
       });
     }
 
-   
     const action =
       new_request_status === ERequestStatus.APPROVED
         ? EActionType.LOAN_APPROVED
@@ -172,7 +175,7 @@ export class LoanRequestsService {
         ? EActionType.LOAN_REJECTED
         : null;
 
-    if(new_request_status !== ERequestStatus.APPROVED){
+    if (new_request_status !== ERequestStatus.APPROVED) {
       const newLog: CreateLogDto = {
         group_id: (requestExists.group as any).id,
         message: `${userInfo.first_name} ${
@@ -209,7 +212,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&
@@ -235,7 +238,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&
@@ -265,7 +268,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&
@@ -293,7 +296,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
-      role
+      role,
     );
     if (
       !isGroupMember &&

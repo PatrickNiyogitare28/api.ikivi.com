@@ -37,7 +37,7 @@ export class ContributionTermService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group,
-      role
+      role,
     );
 
     if (
@@ -72,7 +72,7 @@ export class ContributionTermService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
-      role
+      role,
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -96,7 +96,7 @@ export class ContributionTermService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
-      role
+      role,
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&

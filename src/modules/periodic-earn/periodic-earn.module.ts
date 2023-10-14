@@ -31,7 +31,7 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
       LogEntity,
       UserEntity,
       VerificationEntity,
-      GroupInfoEntity
+      GroupInfoEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -50,7 +50,7 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
     UserService,
     otpService,
     AuthService,
-    GroupInfoService
+    GroupInfoService,
   ],
 })
 export class PeriodicEarnModule implements NestModule {

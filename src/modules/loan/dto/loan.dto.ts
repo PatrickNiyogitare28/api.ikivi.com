@@ -13,7 +13,7 @@ export class CreateLoanDto {
   @IsNotEmpty()
   updated_by: string;
 
-  log?: CreateLogDto
+  log?: CreateLogDto;
 
   @IsOptional()
   @IsUUID()
@@ -23,5 +23,5 @@ export class CreateLoanDto {
   loan_amount?: any;
 
   @IsOptional()
-  amount_topay?: any
+  amount_topay?: any;
 }
