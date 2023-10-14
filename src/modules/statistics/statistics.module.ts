@@ -1,33 +1,37 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { LoanController } from './loan.controller';
-import { LoanService } from './loan.service';
-import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
-import { LoanEntity } from './loan.entity';
+import { StatisticsController } from './statistics.controller';
+import { StatisticsService } from './statistics.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { GroupService } from '../group/group.service';
+import { ContributionService } from '../contribution/contribution.service';
 import { GroupMembersService } from '../group-members/group-members.service';
 import { GroupEntity } from '../group/group.entity';
-import { GroupMembersEntity } from '../group-members/group-members.entity';
+import { ContributionEntity } from '../contribution/contribution.entity';
+import { ContributionTermService } from '../contribution-term/contribution-term.service';
 import { LogsService } from '../logs/logs.service';
 import { UserService } from '../user/user.service';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
+import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
+import { LogEntity } from '../logs/logs.entity';
+import { UserEntity } from '../user/users.entity';
 import { otpService } from '../otp/otp.service';
 import { AuthService } from '../auth/auth.service';
-import { UserEntity } from '../user/users.entity';
 import { VerificationEntity } from '../otp/otp.entity';
-import { LogEntity } from '../logs/logs.entity';
-import { GroupInfoService } from '../group-info/group-info.service';
 import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
+import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
+import { GroupInfoService } from '../group-info/group-info.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      LoanEntity,
       GroupEntity,
+      ContributionEntity,
       GroupMembersEntity,
+      ContributionTermEntity,
+      LogEntity,
       UserEntity,
       VerificationEntity,
-      LogEntity,
       GroupInfoEntity,
     ]),
     JwtModule.register({
@@ -37,11 +41,13 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
       },
     }),
   ],
-  controllers: [LoanController],
+  controllers: [StatisticsController],
   providers: [
-    LoanService,
+    StatisticsService,
     GroupService,
+    ContributionService,
     GroupMembersService,
+    ContributionTermService,
     LogsService,
     UserService,
     otpService,
@@ -49,8 +55,8 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
     GroupInfoService,
   ],
 })
-export class LoanModule implements NestModule {
+export class StatisticsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(LoanController);
+    consumer.apply(AuthMiddleware).forRoutes(StatisticsController);
   }
 }

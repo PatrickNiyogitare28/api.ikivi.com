@@ -15,6 +15,7 @@ import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
 import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 import { LoanEntity } from '../loan/loan.entity';
+import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -133,6 +134,12 @@ export class UserEntity {
     (loan: LoanRequestsEntity) => loan.created_by,
   )
   loan_request_recorder: LoanRequestsEntity;
+
+  @OneToMany(
+    () => GroupInfoEntity,
+    (group_info: GroupInfoEntity) => group_info.updated_by,
+  )
+  group_info_recorder: LoanRequestsEntity;
 
   @OneToMany(() => LoanEntity, (loan: LoanEntity) => loan.updated_by)
   loan_updater: LoanEntity;

@@ -18,6 +18,8 @@ import { otpService } from '../otp/otp.service';
 import { AuthService } from '../auth/auth.service';
 import { UserEntity } from '../user/users.entity';
 import { VerificationEntity } from '../otp/otp.entity';
+import { GroupInfoService } from '../group-info/group-info.service';
+import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { VerificationEntity } from '../otp/otp.entity';
       LogEntity,
       UserEntity,
       VerificationEntity,
+      GroupInfoEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -47,6 +50,7 @@ import { VerificationEntity } from '../otp/otp.entity';
     UserService,
     otpService,
     AuthService,
+    GroupInfoService,
   ],
 })
 export class PeriodicEarnModule implements NestModule {

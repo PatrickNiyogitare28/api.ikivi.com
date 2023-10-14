@@ -19,6 +19,7 @@ import { ContributionTermEntity } from '../contribution-term/contribution-term.e
 import { ContributionEntity } from '../contribution/contribution.entity';
 import { PeriodicEarnEntity } from '../periodic-earn/periodic-earn.entity';
 import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
+import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
 
 @Entity({ name: 'groups' })
 export class GroupEntity {
@@ -96,4 +97,10 @@ export class GroupEntity {
 
   @OneToMany(() => LoanRequestsEntity, (loan: LoanRequestsEntity) => loan.group)
   loan_requests: ContributionTermEntity;
+
+  @OneToMany(
+    () => GroupInfoEntity,
+    (groupInfo: GroupInfoEntity) => groupInfo.group,
+  )
+  group_info: GroupInfoEntity;
 }

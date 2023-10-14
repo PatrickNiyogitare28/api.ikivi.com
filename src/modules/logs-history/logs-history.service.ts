@@ -30,6 +30,7 @@ export class LogsHistoryService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
+      role,
     );
 
     if (!isGroupMember && role !== EUserRole.SYSTEM_ADMIN)

@@ -110,12 +110,20 @@ export class GroupMembersService {
     };
   }
 
-  public async findGroupMemberExists(user_id: string, group_id: string) {
+  public async findGroupMemberExists(
+    user_id: string,
+    group_id: string,
+    role: EUserRole,
+  ) {
     const exists = await this.groupMembersRepository.findOne({
       where: { user: user_id, group: group_id, membership: EStatus.ACTIVE },
     });
     const group = await this.groupService.findGroupById(group_id);
-    if (!exists && group.group_owner.id !== user_id)
+    if (
+      !exists &&
+      group.group_owner.id !== user_id &&
+      role != EUserRole.SYSTEM_ADMIN
+    )
       throw new NotFoundException('User not a member of the group');
     return exists ? exists : true;
   }
@@ -128,5 +136,12 @@ export class GroupMembersService {
       success: true,
       data: memberships,
     };
+  }
+
+  public async listAllMembers(group: string) {
+    const members = await this.groupMembersRepository.find({
+      where: { group: group },
+    });
+    return members;
   }
 }

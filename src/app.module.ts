@@ -23,7 +23,7 @@ import { JoinCodesModule } from './modules/join-codes/join-codes.module';
 import { JoinRequestsModule } from './modules/join-requests/join-requests.module';
 import { ContributionTermModule } from './modules/contribution-term/contribution-term.module';
 import { ContributionModule } from './modules/contribution/contribution.module';
-import { GroupInterestsModule } from './modules/group-interests/group-interests.module';
+import { GroupInfoModule } from './modules/group-info/group-info.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { PeriodicEarnModule } from './modules/periodic-earn/periodic-earn.module';
 import { LoanModule } from './modules/loan/loan.module';
@@ -31,6 +31,7 @@ import { LoanRequestsModule } from './modules/loan-requests/loan-requests.module
 import { LogsModule } from './modules/logs/logs.module';
 import { LogsHistoryModule } from './modules/logs-history/logs-history.module';
 import { AppLoggerMiddleware } from './common/middlewares/logs.middleware';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -58,13 +59,14 @@ import { AppLoggerMiddleware } from './common/middlewares/logs.middleware';
     JoinRequestsModule,
     ContributionTermModule,
     ContributionModule,
-    GroupInterestsModule,
+    GroupInfoModule,
     TransactionsModule,
     PeriodicEarnModule,
     LoanModule,
     LoanRequestsModule,
     LogsModule,
     LogsHistoryModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

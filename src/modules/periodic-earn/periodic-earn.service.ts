@@ -16,6 +16,7 @@ import { UserService } from '../user/user.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
 import { LogsService } from '../logs/logs.service';
+import { GroupInfoService } from '../group-info/group-info.service';
 
 @Injectable()
 export class PeriodicEarnService {
@@ -27,6 +28,7 @@ export class PeriodicEarnService {
     private contributionTermService: ContributionTermService,
     private userService: UserService,
     private logsService: LogsService,
+    private groupInfoService: GroupInfoService,
   ) {}
 
   public async add(dto: AddPeriodicEarnDto, user_id: string, role: EUserRole) {
@@ -45,6 +47,7 @@ export class PeriodicEarnService {
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       group.data.id,
+      role,
     );
 
     const periodicEarn = await this.periodicEarnRepository.save({
@@ -67,6 +70,11 @@ export class PeriodicEarnService {
       },
     };
     await this.logsService.saveLog(newLog);
+    await this.groupInfoService.groupOfferedPeriodicContribution({
+      group: group.data.id,
+      updated_by: user_id,
+      amount: dto.amount,
+    });
     return {
       success: true,
       message: 'Periodic earn saved successfully',
@@ -84,6 +92,7 @@ export class PeriodicEarnService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
+      role,
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -116,6 +125,7 @@ export class PeriodicEarnService {
     const existsInGroup = await this.groupMembersService.findGroupMemberExists(
       user_id,
       periodicEarn.group,
+      role,
     );
 
     if (
@@ -149,6 +159,7 @@ export class PeriodicEarnService {
     await this.groupMembersService.findGroupMemberExists(
       user_id,
       periodicEarn.group,
+      role,
     );
     const newPeriodicEarn = await this.periodicEarnRepository.update(
       periodic_earn_id,
@@ -161,9 +172,17 @@ export class PeriodicEarnService {
     };
   }
 
-  public async userEarnHistory(user_id: string, group_id: string) {
+  public async userEarnHistory(
+    user_id: string,
+    group_id: string,
+    role: EUserRole,
+  ) {
     const userExistsInGroup =
-      await this.groupMembersService.findGroupMemberExists(user_id, group_id);
+      await this.groupMembersService.findGroupMemberExists(
+        user_id,
+        group_id,
+        role,
+      );
     if (!userExistsInGroup) throw new BadRequestException('Access denied');
     const history = await this.periodicEarnRepository.find({
       where: { user: user_id, group: group_id },

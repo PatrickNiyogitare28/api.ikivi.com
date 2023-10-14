@@ -17,6 +17,8 @@ import { LogEntity } from '../logs/logs.entity';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
 import { UserService } from '../user/user.service';
+import { GroupInfoService } from '../group-info/group-info.service';
+import { UserEntity } from '../user/users.entity';
 
 @Injectable()
 export class ContributionService {
@@ -28,6 +30,7 @@ export class ContributionService {
     private contributionTermService: ContributionTermService,
     private logsService: LogsService,
     private userService: UserService,
+    private groupInfoService: GroupInfoService,
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -47,6 +50,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       (contributionTerm.group as any).id,
+      role,
     );
 
     const contribution = await this.contributionRepository.save({
@@ -64,6 +68,11 @@ export class ContributionService {
       data: contribution,
     };
     await this.logsService.saveLog(log);
+    await this.groupInfoService.addOnGroupCapital({
+      group: group.data.id,
+      updated_by: user_id,
+      amount: dto.amount,
+    });
     return {
       success: true,
       message: 'Contribution saved successfully',
@@ -81,6 +90,7 @@ export class ContributionService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
+      role,
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -113,6 +123,7 @@ export class ContributionService {
     const existsInGroup = await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
+      role,
     );
 
     if (
@@ -146,6 +157,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
+      role,
     );
     const newContribution = await this.contributionRepository.update(
       contribution_id,
@@ -158,11 +170,15 @@ export class ContributionService {
     };
   }
 
-  public async getContributionInfo(group: string, user: string) {
+  public async getContributionInfo(
+    group: string,
+    user: string,
+    role: EUserRole,
+  ) {
     const groupExists = await this.groupService.findGroupById(group);
     if (!groupExists) throw new NotFoundException('Group not found');
 
-    await this.groupMembersService.findGroupMemberExists(user, group);
+    await this.groupMembersService.findGroupMemberExists(user, group, role);
 
     const groupContributions = await this.contributionRepository.find({
       where: { group },
@@ -175,7 +191,7 @@ export class ContributionService {
 
     let myTotalContribution = 0;
     for (const contribution of groupContributions) {
-      if (contribution.user === user) {
+      if ((contribution.user as any as UserEntity).id == user) {
         myTotalContribution += parseInt(contribution.amount.toString());
       }
     }
