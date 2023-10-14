@@ -17,6 +17,8 @@ import { LogEntity } from '../logs/logs.entity';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
 import { UserService } from '../user/user.service';
+import { GroupInfoService } from '../group-info/group-info.service';
+import { UserEntity } from '../user/users.entity';
 
 @Injectable()
 export class ContributionService {
@@ -28,6 +30,7 @@ export class ContributionService {
     private contributionTermService: ContributionTermService,
     private logsService: LogsService,
     private userService: UserService,
+    private groupInfoService: GroupInfoService
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -65,6 +68,11 @@ export class ContributionService {
       data: contribution,
     };
     await this.logsService.saveLog(log);
+    await this.groupInfoService.addOnGroupCapital({
+      group: group.data.id,
+      updated_by: user_id,
+      amount: dto.amount
+    })
     return {
       success: true,
       message: 'Contribution saved successfully',
@@ -178,8 +186,12 @@ export class ContributionService {
     }
 
     let myTotalContribution = 0;
+    console.log("before finding my contribution this is the total: ")
     for (const contribution of groupContributions) {
-      if (contribution.user === user) {
+       console.log(contribution.user);
+       console.log(user)
+      if ((contribution.user as any as UserEntity).id == user) {
+        console.log("found my contribution");
         myTotalContribution += parseInt(contribution.amount.toString());
       }
     }
@@ -194,4 +206,5 @@ export class ContributionService {
       myShare: myShare.toFixed(1),
     };
   }
+
 }

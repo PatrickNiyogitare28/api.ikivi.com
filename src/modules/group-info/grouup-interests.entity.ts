@@ -8,15 +8,15 @@ export class GroupInfoEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne('GroupEntity', (group: GroupEntity) => group.group_info, {
-        eager: true,
-      })
+      // @ManyToOne(() => GroupEntity ,(group: GroupEntity) => group.group_info, {
+      //   eager: true,
+      // })
       @Column({ nullable: false })
       group: string;
 
-      @ManyToOne('UserEntity', (user: UserEntity) => user.group_info_recorder, {
-        eager: true,
-      })
+      // @ManyToOne(() => UserEntity, (user: UserEntity) => user.group_info_recorder, {
+      //   eager: true,
+      // })
       @Column({ nullable: true })
       updated_by: string;
 
@@ -28,7 +28,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);
@@ -45,7 +45,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);
@@ -62,7 +62,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);
@@ -79,7 +79,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);
@@ -96,7 +96,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);
@@ -113,7 +113,7 @@ export class GroupInfoEntity{
         scale: 2,
         transformer: {
           to(value: Decimal): string {
-            return value.toString();
+            return value?.toString();
           },
           from(value: string): Decimal {
             return new Decimal(value);

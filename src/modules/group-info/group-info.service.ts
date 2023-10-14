@@ -15,17 +15,16 @@ export class GroupInfoService {
     // Initialize group info
     public async initialGroupInfo(dto: InitializeGroupInfoDto) {
         const {group, updated_by} = dto;
-        
-        const groupInfo = await this.groupInfoRepository.save({
-            group,
-            updated_by
-        })
+        console.log("Initializing")
+        console.log(group)
+        console.log(updated_by)
+        const groupInfo = await this.groupInfoRepository.save(dto)
         return groupInfo;
     }
 
     // Add on group total capital
     public async addOnGroupCapital(dto: AddOnGroupTotalCapitalDto){
-        const {group, updated_by, total_capital} = dto;
+        const {group, updated_by, amount} = dto;
         
         const groupInfo = await this.groupInfoRepository.findOne({where: {group}});
         if(!groupInfo) {
@@ -33,7 +32,10 @@ export class GroupInfoService {
             return this.addOnGroupCapital(dto);
         }
         // update saving the new total capital here
-        groupInfo.total_capital = total_capital as unknown as Decimal;
+        const newCapital = groupInfo.total_capital.add(new Decimal(amount))
+        const newAvailableAmount = groupInfo.available_amount.add(new Decimal(amount))
+        groupInfo.total_capital =  newCapital;
+        groupInfo.available_amount = newAvailableAmount;
         await this.groupInfoRepository.save(groupInfo);
         return groupInfo;
     }
@@ -80,7 +82,7 @@ export class GroupInfoService {
         // ** think about what to do with total_loans -> done
 
         const newCapital = groupInfo.total_capital.add(new Decimal(interest));
-        const newAvailableAmount = groupInfo.available_amount.add(new Decimal(amount_paid + interest));
+        const newAvailableAmount = groupInfo.available_amount.add(amount_paid + interest);
         const newUnpaidLoan = groupInfo.current_unpaid_loan.sub(amount_paid);
         const newInterest = groupInfo.available_interest.add(new Decimal(interest));
 

@@ -21,7 +21,7 @@ export class AddOnGroupTotalCapitalDto {
 
     @IsInt()
     @IsNotEmpty()
-    total_capital: number;
+    amount: number;
 }
 
 export class loanOfferedDto {

@@ -16,6 +16,7 @@ import { UserService } from '../user/user.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
 import { LogsService } from '../logs/logs.service';
+import { GroupInfoService } from '../group-info/group-info.service';
 
 @Injectable()
 export class PeriodicEarnService {
@@ -27,6 +28,7 @@ export class PeriodicEarnService {
     private contributionTermService: ContributionTermService,
     private userService: UserService,
     private logsService: LogsService,
+    private groupInfoService: GroupInfoService
   ) {}
 
   public async add(dto: AddPeriodicEarnDto, user_id: string, role: EUserRole) {
@@ -68,6 +70,11 @@ export class PeriodicEarnService {
       },
     };
     await this.logsService.saveLog(newLog);
+    await this.groupInfoService.groupOfferedPeriodicContribution({
+      group: group.data.id,
+      updated_by: user_id,
+      amount: dto.amount
+    })
     return {
       success: true,
       message: 'Periodic earn saved successfully',

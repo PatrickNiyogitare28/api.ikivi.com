@@ -15,6 +15,7 @@ import { GroupEntity } from '../group/group.entity';
 import { LogsService } from '../logs/logs.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
+import { GroupInfoService } from '../group-info/group-info.service';
 
 @Injectable()
 export class LoanService {
@@ -24,11 +25,19 @@ export class LoanService {
     private readonly groupService: GroupService,
     private readonly groupMembersService: GroupMembersService,
     private readonly logsService: LogsService,
+    private readonly groupInfoService: GroupInfoService
   ) {}
 
   public async create(newLoanDto: CreateLoanDto) {
-    const loan = await this.loanRepository.save(newLoanDto as any);
-
+    const {loan_request, updated_by, log, group_id,loan_amount, amount_topay} = newLoanDto;
+    const loan = await this.loanRepository.save({loan_request, updated_by} as any);
+    await this.logsService.saveLog(log);
+    await this.groupInfoService.groupOfferedLoan({
+      group: group_id,
+      updated_by,
+      loan_amount,
+      amount_topay
+    })
     return loan;
   }
 
@@ -56,6 +65,8 @@ export class LoanService {
       where: { loan_request: { group: group_id } },
       relations: ['loan_request'],
     });
+
+
 
     return {
       success: true,
@@ -193,6 +204,14 @@ export class LoanService {
       actor_id: user_id,
     };
     await this.logsService.saveLog(newLog);
+    if(loan_status === ELoanStatus.PAID){
+      await this.groupInfoService.groupLoanFullyPaid({
+        group: (loanExists.loan_request.group as any).id,
+        updated_by: user_id,
+        amount_paid: loanExists.loan_request.amount,
+        interest: loanExists.loan_request.interest
+      })
+    }
 
     return {
       success: true,

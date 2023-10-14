@@ -18,6 +18,7 @@ import { CreateLogDto } from '../logs/dto/log.dto';
 import { UserService } from '../user/user.service';
 import { EActionType } from 'src/enums/EActionTypes';
 import { ELoanStatus } from 'src/enums/ELoanStatus';
+import { EStatus } from 'src/enums/EStatus';
 
 @Injectable()
 export class LoanRequestsService {
@@ -58,7 +59,7 @@ export class LoanRequestsService {
     );
     if (!userIsMember) throw new BadRequestException('User is not a member');
 
-    const interest = (createDto.amount * createDto.interest_rate) as any;
+    const interest = (createDto.amount * createDto.interest_rate) / 100 as any;
     const loanRequest = await this.loanRequestRepository.save({
       ...createDto,
       interest,
@@ -67,14 +68,26 @@ export class LoanRequestsService {
     } as any);
 
     if (!loanRequest) throw new BadRequestException('Loan not created');
+    const userInfo = await this.userService.findUser({ id: createDto.user });
     let loan;
-    if (createDto.request_status === ERequestStatus.APPROVED)
+    if (createDto.request_status === ERequestStatus.APPROVED){
+      const newLoanLog: CreateLogDto = {
+        group_id: createDto.group,
+        message: `${userInfo.first_name} ${userInfo.last_name} received a loan`,
+        action: EActionType.LOAN_APPROVED,
+        actor_id: user_id,
+        data: loanRequest,
+      };
       loan = await this.loanService.create({
         loan_request: loanRequest.id,
         updated_by: user_id,
+        log: newLoanLog,
+        group_id: createDto.group,
+        loan_amount: createDto.amount,
+        amount_topay: (createDto.amount + interest)
       });
+    }
 
-    const userInfo = await this.userService.findUser({ id: createDto.user });
     const newLog: CreateLogDto = {
       group_id: createDto.group,
       message: `${userInfo.first_name} ${userInfo.last_name} requested loan`,
@@ -121,13 +134,35 @@ export class LoanRequestsService {
     )
       throw new BadGatewayException('Access denied');
 
+    if(new_request_status === ERequestStatus.APPROVED && requestExists.request_status === ERequestStatus.APPROVED){
+      return  new BadRequestException("Loan Status not updated")
+    }
     const newRequest = await this.loanRequestRepository.update(request_id, {
       request_status: new_request_status,
     });
-
     const userInfo = await this.userService.findUser({
       id: (requestExists.user as any).id,
     });
+
+    if(new_request_status === ERequestStatus.APPROVED ){
+      const newLoanLog: CreateLogDto = {
+        group_id: (requestExists.group as any).id,
+        message: `${userInfo.first_name} ${userInfo.last_name} received a loan`,
+        action: EActionType.LOAN_APPROVED,
+        actor_id: user_id,
+        data: requestExists,
+      };
+      await this.loanService.create({
+        loan_request: requestExists.id,
+        updated_by: user_id,
+        log: newLoanLog,
+        group_id: (requestExists.group as any).id,
+        loan_amount: requestExists.amount,
+        amount_topay: (requestExists.amount.add(requestExists.interest))
+      });
+    }
+
+   
     const action =
       new_request_status === ERequestStatus.APPROVED
         ? EActionType.LOAN_APPROVED
@@ -137,16 +172,18 @@ export class LoanRequestsService {
         ? EActionType.LOAN_REJECTED
         : null;
 
-    const newLog: CreateLogDto = {
-      group_id: (requestExists.group as any).id,
-      message: `${userInfo.first_name} ${
-        userInfo.last_name
-      } loan ${new_request_status.toLowerCase()}`,
-      action,
-      actor_id: user_id,
-      data: requestExists,
-    };
-    await this.logsService.saveLog(newLog);
+    if(new_request_status !== ERequestStatus.APPROVED){
+      const newLog: CreateLogDto = {
+        group_id: (requestExists.group as any).id,
+        message: `${userInfo.first_name} ${
+          userInfo.last_name
+        } loan ${new_request_status.toLowerCase()}`,
+        action,
+        actor_id: user_id,
+        data: requestExists,
+      };
+      await this.logsService.saveLog(newLog);
+    }
     return {
       success: true,
       message: 'Request status updated successfully',
