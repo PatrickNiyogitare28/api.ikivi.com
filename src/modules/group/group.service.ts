@@ -11,12 +11,14 @@ import { GroupEntity } from './group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EStatus } from 'src/enums/EStatus';
 import { EUserRole } from 'src/enums/EUserRole';
+import { GroupMembersService } from '../group-members/group-members.service';
 
 @Injectable()
 export class GroupService {
   constructor(
     @InjectRepository(GroupEntity)
     private groupRepository: Repository<GroupEntity>,
+    private groupMembersService: GroupMembersService
   ) {}
 
   public async register(newGroupDto: CreateGroupDto, owner_id: string) {
@@ -25,6 +27,8 @@ export class GroupService {
         ...newGroupDto,
         group_owner: owner_id,
       } as any);
+      // make admin a member
+      await this.groupMembersService.addMember({user: owner_id, group: group.id})
       return {
         success: true,
         message: 'Group registered successfully',
