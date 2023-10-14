@@ -45,6 +45,7 @@ export class PeriodicEarnService {
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       group.data.id,
+      role
     );
 
     const periodicEarn = await this.periodicEarnRepository.save({
@@ -84,6 +85,7 @@ export class PeriodicEarnService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
+      role
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -116,6 +118,7 @@ export class PeriodicEarnService {
     const existsInGroup = await this.groupMembersService.findGroupMemberExists(
       user_id,
       periodicEarn.group,
+      role
     );
 
     if (
@@ -149,6 +152,7 @@ export class PeriodicEarnService {
     await this.groupMembersService.findGroupMemberExists(
       user_id,
       periodicEarn.group,
+      role
     );
     const newPeriodicEarn = await this.periodicEarnRepository.update(
       periodic_earn_id,
@@ -161,9 +165,9 @@ export class PeriodicEarnService {
     };
   }
 
-  public async userEarnHistory(user_id: string, group_id: string) {
+  public async userEarnHistory(user_id: string, group_id: string, role: EUserRole) {
     const userExistsInGroup =
-      await this.groupMembersService.findGroupMemberExists(user_id, group_id);
+      await this.groupMembersService.findGroupMemberExists(user_id, group_id, role);
     if (!userExistsInGroup) throw new BadRequestException('Access denied');
     const history = await this.periodicEarnRepository.find({
       where: { user: user_id, group: group_id },

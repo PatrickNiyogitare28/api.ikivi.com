@@ -42,6 +42,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -53,6 +54,7 @@ export class LoanRequestsService {
     const userIsMember = await this.groupMembersService.findGroupMemberExists(
       createDto.user,
       group.id,
+      role
     );
     if (!userIsMember) throw new BadRequestException('User is not a member');
 
@@ -110,6 +112,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -169,6 +172,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -194,6 +198,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -223,6 +228,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -250,6 +256,7 @@ export class LoanRequestsService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&

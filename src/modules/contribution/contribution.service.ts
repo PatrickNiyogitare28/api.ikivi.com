@@ -47,6 +47,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       dto.user,
       (contributionTerm.group as any).id,
+      role
     );
 
     const contribution = await this.contributionRepository.save({
@@ -81,6 +82,7 @@ export class ContributionService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group_id,
+      role
     );
     if (
       role !== EUserRole.SYSTEM_ADMIN &&
@@ -113,6 +115,7 @@ export class ContributionService {
     const existsInGroup = await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
+      role
     );
 
     if (
@@ -146,6 +149,7 @@ export class ContributionService {
     await this.groupMembersService.findGroupMemberExists(
       user_id,
       contribution.group,
+      role
     );
     const newContribution = await this.contributionRepository.update(
       contribution_id,
@@ -158,11 +162,11 @@ export class ContributionService {
     };
   }
 
-  public async getContributionInfo(group: string, user: string) {
+  public async getContributionInfo(group: string, user: string, role: EUserRole) {
     const groupExists = await this.groupService.findGroupById(group);
     if (!groupExists) throw new NotFoundException('Group not found');
 
-    await this.groupMembersService.findGroupMemberExists(user, group);
+    await this.groupMembersService.findGroupMemberExists(user, group, role);
 
     const groupContributions = await this.contributionRepository.find({
       where: { group },

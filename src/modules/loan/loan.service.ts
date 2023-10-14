@@ -43,6 +43,7 @@ export class LoanService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -74,6 +75,7 @@ export class LoanService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -103,6 +105,7 @@ export class LoanService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
@@ -133,6 +136,7 @@ export class LoanService {
     const isGroupMember = await this.groupMembersService.findGroupMemberExists(
       user_id,
       group.id,
+      role
     );
     if (
       !isGroupMember &&
