@@ -13,10 +13,11 @@ import { GroupEntity } from '../group/group.entity';
 import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
 import { JwtModule } from '@nestjs/jwt';
 import { AdminMiddleware } from 'src/common/middlewares/admin.middleware';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([GroupMetadataEntity, GroupEntity]),
+    TypeOrmModule.forFeature([GroupMetadataEntity, GroupEntity, GroupMembersEntity]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {

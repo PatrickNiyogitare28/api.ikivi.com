@@ -7,10 +7,11 @@ import { GroupEntity } from '../group/group.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { GroupService } from '../group/group.service';
 import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([JoinCodesEntity, GroupEntity]),
+    TypeOrmModule.forFeature([JoinCodesEntity, GroupEntity, GroupMembersEntity]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {
