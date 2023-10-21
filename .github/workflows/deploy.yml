@@ -17,6 +17,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm i --legacy-peer-deps
-      - run: npm run build
+      - run: npm install yearn
+      - run: yarn install
+      - run: yarn build
     
