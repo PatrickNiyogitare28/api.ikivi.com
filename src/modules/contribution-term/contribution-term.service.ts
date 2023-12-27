@@ -81,7 +81,7 @@ export class ContributionTermService {
     )
       throw new BadRequestException('Access denied to perform this action');
     const terms = await this.contributionTermRepository.find({
-      where: { group: group_id },
+      where: { group: group_id }, order: {created_at: 'DESC'}
     });
     return terms;
   }
