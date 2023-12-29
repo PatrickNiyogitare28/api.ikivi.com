@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadRequestException,
   Injectable,
@@ -19,7 +21,7 @@ export class GroupService {
     @InjectRepository(GroupEntity)
     private groupRepository: Repository<GroupEntity>,
     @InjectRepository(GroupMembersEntity)
-    private  groupMembersRepository: Repository<GroupMembersEntity>
+    private groupMembersRepository: Repository<GroupMembersEntity>,
   ) {}
 
   public async register(newGroupDto: CreateGroupDto, owner_id: string) {
