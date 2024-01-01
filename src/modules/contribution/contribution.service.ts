@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadRequestException,
   Injectable,
@@ -205,5 +206,21 @@ export class ContributionService {
       contributionRatio: contributionRatio.toFixed(1),
       myShare: myShare.toFixed(1),
     };
+  }
+
+  public async getGroupUserContribution(
+    userId: string,
+    groupId: string,
+    role: EUserRole,
+  ) {
+    const groupExists = await this.groupService.findGroupById(groupId);
+    if (!groupExists) throw new NotFoundException('Group not found');
+
+    await this.groupMembersService.findGroupMemberExists(userId, groupId, role);
+
+    const contributions = await this.contributionRepository.find({
+      where: { group: groupId, user: userId },
+    });
+    return contributions;
   }
 }
