@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Controller, HttpCode, Param, Post, Req } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionsService } from './transactions.service';
 import { ContributionEntity } from '../contribution/contribution.entity';
@@ -12,7 +12,7 @@ import { ContributionEntity } from '../contribution/contribution.entity';
 export class TransactionsController {
   constructor(private transactionService: TransactionsService) {}
 
-  @Post('/group/:groupId')
+  @Get('/group/:groupId')
   @ApiResponse({
     status: 201,
     description: 'Term crated successfully',

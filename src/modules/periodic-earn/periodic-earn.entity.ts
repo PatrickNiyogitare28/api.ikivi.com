@@ -13,7 +13,7 @@ import Decimal from 'decimal.js';
 import { ContributionTermEntity } from '../contribution-term/contribution-term.entity';
 import { UserEntity } from '../user/users.entity';
 
-@Entity({ name: 'contribution' })
+@Entity({ name: 'periodic-earn' })
 export class PeriodicEarnEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
