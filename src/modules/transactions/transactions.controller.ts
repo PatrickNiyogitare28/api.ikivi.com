@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Controller, HttpCode, Param, Post, Req } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionsService } from './transactions.service';
 import { ContributionEntity } from '../contribution/contribution.entity';
 
 @Controller('transactions')
 @ApiTags('Transactions')
+@ApiBearerAuth()
 export class TransactionsController {
   constructor(private transactionService: TransactionsService) {}
 
