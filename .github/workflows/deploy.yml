@@ -18,5 +18,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
-
-    
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "Creating .env file..."
+          echo "# Auto-generated .env file from GitHub Actions" > .env
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env 
+          echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env 
+          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env 
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env 
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env 
+          echo "PORT=${{ secrets.PORT }}" >> .env 
+          echo "MODE=${{ secrets.MODE }}" >> .env 
+          echo "RUN_MIGRATIONS=${{ secrets.RUN_MIGRATIONS }}" >> .env 
+          echo "DATABASE_TYPE=${{ secrets.DATABASE_TYPE }}" >> .env 
+          echo "DATABASE_BACKEND_URL=${{ secrets.DATABASE_BACKEND_URL }}" >> .env 
+          echo "DATABASE_SYNCHRONIZE=${{ secrets.DATABASE_SYNCHRONIZE }}" >> .env 
+          echo "DATABASE_MAX_CONNECTIONS=${{ secrets.DATABASE_MAX_CONNECTIONS }}" >> .env 
+          echo "DATABASE_SSL_ENABLED=${{ secrets.DATABASE_SSL_ENABLED }}" >> .env 
+          echo "DATABASE_REJECT_UNAUTHORIZED=${{ secrets.DATABASE_REJECT_UNAUTHORIZED }}" >> .env 
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env 
+          echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env 
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env 
+          echo "API_PREFIX=${{ secrets.API_PREFIX }}" >> .env 
+          echo "BACKEND_DOMAIN=${{ secrets.BACKEND_DOMAIN }}" >> .env 
+          echo "SECRETKEY=${{ secrets.SECRETKEY }}" >> .env 
+          echo "EXPIRESIN=${{ secrets.EXPIRESIN }}" >> .env 
+          echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env 
+          echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env 
+          echo "SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }}" >> .env 
