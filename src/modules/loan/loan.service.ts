@@ -16,6 +16,7 @@ import { LogsService } from '../logs/logs.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
 import { GroupInfoService } from '../group-info/group-info.service';
+import { LoanRequestsService } from '../loan-requests/loan-requests.service';
 
 @Injectable()
 export class LoanService {
@@ -26,6 +27,7 @@ export class LoanService {
     private readonly groupMembersService: GroupMembersService,
     private readonly logsService: LogsService,
     private readonly groupInfoService: GroupInfoService,
+    // private readonly loanRequestService: LoanRequestsService
   ) {}
 
   public async create(newLoanDto: CreateLoanDto) {
@@ -226,5 +228,13 @@ export class LoanService {
       message: 'Loan status updated successfully',
       data: newLoan,
     };
+  }
+
+  public async getAllGroupLoans(group_id: string){
+    const loans = await this.loanRepository.find({
+      where: { loan_request: { group: group_id }},
+      relations: ['loan_request'],
+    });
+    return loans;
   }
 }

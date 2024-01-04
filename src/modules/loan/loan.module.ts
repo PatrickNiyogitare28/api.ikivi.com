@@ -18,6 +18,7 @@ import { VerificationEntity } from '../otp/otp.entity';
 import { LogEntity } from '../logs/logs.entity';
 import { GroupInfoService } from '../group-info/group-info.service';
 import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
+import { LoanRequestsService } from '../loan-requests/loan-requests.service';
 
 @Module({
   imports: [

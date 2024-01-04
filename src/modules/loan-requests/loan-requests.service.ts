@@ -313,4 +313,9 @@ export class LoanRequestsService {
       data,
     };
   }
+
+  public async getAllGroupLoanRequest(group_id: string){
+    const requests = await this.loanRequestRepository.find({where: {group: group_id}});
+    return requests;
+  }
 }

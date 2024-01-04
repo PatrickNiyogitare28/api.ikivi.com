@@ -32,6 +32,8 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
 import { VerificationEntity } from '../otp/otp.entity';
 import { AdminMiddleware } from 'src/common/middlewares/admin.middleware';
 import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
+import { LoanRequestsService } from '../loan-requests/loan-requests.service';
+import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
       UserEntity,
       GroupInfoEntity,
       VerificationEntity,
+      LoanRequestsEntity
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -67,6 +70,7 @@ import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
     GroupInfoService,
     otpService,
     AuthService,
+    LoanRequestsService
   ],
   controllers: [TransactionsController],
 })
