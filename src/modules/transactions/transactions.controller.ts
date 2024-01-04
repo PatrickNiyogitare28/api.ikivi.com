@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Controller, Get, HttpCode, Param, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionsService } from './transactions.service';
 import { ContributionEntity } from '../contribution/contribution.entity';
 
@@ -31,4 +31,20 @@ export class TransactionsController {
       req.user.role,
     );
   }
+
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiParam({ name: 'group', description: 'Group Id' })
+  @Get('/loans/group/:group/history')
+  async groupLoanHistory(
+    @Param('group') group_id: string,
+    @Req() req: any,
+  ) {
+    return await this.transactionService.getGroupLoanHistory(
+      group_id,
+      req.user.role,
+      req.user.user_id,
+    );
+  }
+
 }
