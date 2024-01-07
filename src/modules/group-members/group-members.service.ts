@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadRequestException,
   Injectable,
@@ -15,6 +17,8 @@ import { LogsService } from '../logs/logs.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { UserService } from '../user/user.service';
 import { EActionType } from 'src/enums/EActionTypes';
+import { ENotificationType } from 'src/enums/ENotificationType';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class GroupMembersService {
@@ -24,6 +28,7 @@ export class GroupMembersService {
     private groupService: GroupService,
     private logsService: LogsService,
     private userService: UserService,
+    private notificationService: NotificationsService,
   ) {}
 
   public async addMember(createGroupMemberDto: CreateGroupMemberDto) {
@@ -50,6 +55,7 @@ export class GroupMembersService {
       };
       await this.logsService.saveLog(newLogDto);
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       throw new InternalServerErrorException(e.message);
     }
   }
@@ -143,5 +149,25 @@ export class GroupMembersService {
       where: { group: group },
     });
     return members;
+  }
+
+  public async broadCastNotification(
+    group: string,
+    message: string,
+    notificationType: ENotificationType,
+  ) {
+    const groupMembers = await this.groupMembersRepository.find({
+      where: { group },
+    });
+
+    groupMembers.forEach(async (member) => {
+      const notification = {
+        group,
+        user: member.id,
+        type: notificationType,
+        message,
+      };
+      await this.notificationService.create(notification);
+    });
   }
 }

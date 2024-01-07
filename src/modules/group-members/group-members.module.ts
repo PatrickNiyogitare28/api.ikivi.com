@@ -14,6 +14,8 @@ import { UserEntity } from '../user/users.entity';
 import { otpService } from '../otp/otp.service';
 import { AuthService } from '../auth/auth.service';
 import { VerificationEntity } from '../otp/otp.entity';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationEntity } from '../notifications/notifications.entity';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { VerificationEntity } from '../otp/otp.entity';
       LogEntity,
       UserEntity,
       VerificationEntity,
+      NotificationEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -39,6 +42,7 @@ import { VerificationEntity } from '../otp/otp.entity';
     UserService,
     otpService,
     AuthService,
+    NotificationsService,
   ],
 })
 export class GroupMembersModule implements NestModule {

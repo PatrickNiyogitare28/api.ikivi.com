@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   BadGatewayException,
   BadRequestException,
@@ -19,6 +24,8 @@ import { UserService } from '../user/user.service';
 import { EActionType } from 'src/enums/EActionTypes';
 import { ELoanStatus } from 'src/enums/ELoanStatus';
 import { EStatus } from 'src/enums/EStatus';
+import { NotificationsService } from '../notifications/notifications.service';
+import { ENotificationType } from 'src/enums/ENotificationType';
 
 @Injectable()
 export class LoanRequestsService {
@@ -30,6 +37,7 @@ export class LoanRequestsService {
     private readonly loanService: LoanService,
     private readonly logsService: LogsService,
     private readonly userService: UserService,
+    private readonly notificationService: NotificationsService,
   ) {}
 
   public async create(
@@ -87,6 +95,12 @@ export class LoanRequestsService {
         loan_amount: createDto.amount,
         amount_topay: createDto.amount + interest,
       });
+      await this.notificationService.create({
+        group: createDto.group,
+        user: createDto.user,
+        type: ENotificationType.LOAN_REQUEST,
+        message: `Your loan request of ${createDto.amount} RWF was accepted`,
+      });
     }
 
     const newLog: CreateLogDto = {
@@ -96,12 +110,20 @@ export class LoanRequestsService {
       actor_id: user_id,
       data: loanRequest,
     };
+
     await this.logsService.saveLog(newLog);
     const responsePayload = {
       success: true,
       message: 'Loan requested successfully',
       data: loanRequest,
     };
+
+    await this.notificationService.create({
+      group: createDto.group,
+      user: createDto.user,
+      type: ENotificationType.LOAN_REQUEST,
+      message: `Your loan request of ${createDto.amount} RWF was received`,
+    });
 
     if (loan) responsePayload['loan'] = loan;
     return responsePayload;
@@ -164,6 +186,12 @@ export class LoanRequestsService {
         loan_amount: requestExists.amount,
         amount_topay: requestExists.amount.add(requestExists.interest),
       });
+      await this.notificationService.create({
+        group: (requestExists.group as any).id,
+        user: userInfo.id,
+        type: ENotificationType.LOAN_REQUEST,
+        message: `Your loan request of ${requestExists.amount} RWF was accepted`,
+      });
     }
 
     const action =
@@ -186,6 +214,14 @@ export class LoanRequestsService {
         data: requestExists,
       };
       await this.logsService.saveLog(newLog);
+    }
+    if (new_request_status === ERequestStatus.REJECTED) {
+      await this.notificationService.create({
+        group: (requestExists.group as any).id,
+        user: userInfo.id,
+        type: ENotificationType.LOAN_REQUEST,
+        message: `Your loan request of ${requestExists.amount} RWF was denied`,
+      });
     }
     return {
       success: true,
@@ -314,8 +350,10 @@ export class LoanRequestsService {
     };
   }
 
-  public async getAllGroupLoanRequest(group_id: string){
-    const requests = await this.loanRequestRepository.find({where: {group: group_id}});
+  public async getAllGroupLoanRequest(group_id: string) {
+    const requests = await this.loanRequestRepository.find({
+      where: { group: group_id },
+    });
     return requests;
   }
 }
