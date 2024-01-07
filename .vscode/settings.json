@@ -1,5 +1,7 @@
 {
   "workbench.colorCustomizations": {
     "editorUnnecessaryCode.border": "#dd7aab"
-  }
+  },
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true},
+  "eslint.alwaysShowStatus": true
 }

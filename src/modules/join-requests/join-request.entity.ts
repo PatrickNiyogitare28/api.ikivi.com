@@ -53,13 +53,6 @@ export class JoinRequestsEntity {
   @Column({ nullable: false })
   user: string;
 
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    nullable: true,
-  })
-  loan_due_date: Date;
-
   @CreateDateColumn() createdAt?: Date;
   @UpdateDateColumn() updatedAt?: Date;
 }

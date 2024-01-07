@@ -16,6 +16,8 @@ import { UserEntity } from '../user/users.entity';
 import { otpService } from '../otp/otp.service';
 import { VerificationEntity } from '../otp/otp.entity';
 import { AuthService } from '../auth/auth.service';
+import { NotificationEntity } from '../notifications/notifications.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { AuthService } from '../auth/auth.service';
       LogEntity,
       UserEntity,
       VerificationEntity,
+      NotificationEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -42,6 +45,7 @@ import { AuthService } from '../auth/auth.service';
     UserService,
     otpService,
     AuthService,
+    NotificationsService,
   ],
   controllers: [ContributionTermController],
 })

@@ -20,6 +20,8 @@ import { UserEntity } from '../user/users.entity';
 import { LogEntity } from '../logs/logs.entity';
 import { GroupInfoService } from '../group-info/group-info.service';
 import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
+import { NotificationEntity } from '../notifications/notifications.entity';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
       UserEntity,
       LogEntity,
       GroupInfoEntity,
+      NotificationEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -51,6 +54,7 @@ import { GroupInfoEntity } from '../group-info/grouup-interests.entity';
     AuthService,
     otpService,
     GroupInfoService,
+    NotificationsService,
   ],
 })
 export class LoanRequestsModule implements NestModule {

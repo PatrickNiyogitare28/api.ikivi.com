@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadGatewayException,
   Injectable,
@@ -26,8 +27,7 @@ export class LoanService {
     private readonly groupService: GroupService,
     private readonly groupMembersService: GroupMembersService,
     private readonly logsService: LogsService,
-    private readonly groupInfoService: GroupInfoService,
-    // private readonly loanRequestService: LoanRequestsService
+    private readonly groupInfoService: GroupInfoService, // private readonly loanRequestService: LoanRequestsService
   ) {}
 
   public async create(newLoanDto: CreateLoanDto) {
@@ -230,9 +230,9 @@ export class LoanService {
     };
   }
 
-  public async getAllGroupLoans(group_id: string){
+  public async getAllGroupLoans(group_id: string) {
     const loans = await this.loanRepository.find({
-      where: { loan_request: { group: group_id }},
+      where: { loan_request: { group: group_id } },
       relations: ['loan_request'],
     });
     return loans;
