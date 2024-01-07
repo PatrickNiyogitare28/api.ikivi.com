@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Controller, Get, Param, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoanEntity } from './loan.entity';
@@ -54,7 +55,6 @@ export class LoanController {
       loan_status,
     );
   }
-
 
   @ApiResponse({
     status: 200,

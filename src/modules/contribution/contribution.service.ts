@@ -20,6 +20,8 @@ import { EActionType } from 'src/enums/EActionTypes';
 import { UserService } from '../user/user.service';
 import { GroupInfoService } from '../group-info/group-info.service';
 import { UserEntity } from '../user/users.entity';
+import { NotificationsService } from '../notifications/notifications.service';
+import { ENotificationType } from 'src/enums/ENotificationType';
 
 @Injectable()
 export class ContributionService {
@@ -32,6 +34,7 @@ export class ContributionService {
     private logsService: LogsService,
     private userService: UserService,
     private groupInfoService: GroupInfoService,
+    private notificationService: NotificationsService,
   ) {}
 
   public async add(dto: AddContributionDto, user_id: string, role: EUserRole) {
@@ -69,10 +72,17 @@ export class ContributionService {
       data: contribution,
     };
     await this.logsService.saveLog(log);
+
     await this.groupInfoService.addOnGroupCapital({
       group: group.data.id,
       updated_by: user_id,
       amount: dto.amount,
+    });
+    await this.notificationService.create({
+      group: (contributionTerm.group as any).id,
+      user: dto.user,
+      type: ENotificationType.PERIODIC_CONTRIBUTION,
+      message: `Your ${dto.amount} RWF contribution was received`,
     });
     return {
       success: true,

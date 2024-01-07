@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import {
   BadRequestException,
   Injectable,
@@ -15,6 +17,8 @@ import { GroupMembersService } from '../group-members/group-members.service';
 import { LogsService } from '../logs/logs.service';
 import { CreateLogDto } from '../logs/dto/log.dto';
 import { EActionType } from 'src/enums/EActionTypes';
+import { NotificationsService } from '../notifications/notifications.service';
+import { ENotificationType } from 'src/enums/ENotificationType';
 
 @Injectable()
 export class ContributionTermService {
@@ -24,6 +28,7 @@ export class ContributionTermService {
     private readonly groupService: GroupService,
     private readonly groupMembersService: GroupMembersService,
     private readonly logsService: LogsService,
+    private readonly notificationService: NotificationsService,
   ) {}
 
   public async openContributionTerm(
@@ -56,6 +61,11 @@ export class ContributionTermService {
       data: term,
     };
     await this.logsService.saveLog(newLog);
+    this.groupMembersService.broadCastNotification(
+      createTermDto.group,
+      `New contribution term ${createTermDto.name} opened`,
+      ENotificationType.CONTRIBUTION_TERM,
+    );
     return {
       success: true,
       data: term,
@@ -81,7 +91,8 @@ export class ContributionTermService {
     )
       throw new BadRequestException('Access denied to perform this action');
     const terms = await this.contributionTermRepository.find({
-      where: { group: group_id }, order: {created_at: 'DESC'}
+      where: { group: group_id },
+      order: { created_at: 'DESC' },
     });
     return terms;
   }
