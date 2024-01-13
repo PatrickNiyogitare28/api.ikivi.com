@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
@@ -160,10 +162,10 @@ export class GroupMembersService {
       where: { group },
     });
 
-    groupMembers.forEach(async (member) => {
+    groupMembers.forEach(async (member: any) => {
       const notification = {
-        group,
-        user: member.id,
+        group: group,
+        user: member.user.id,
         type: notificationType,
         message,
       };
