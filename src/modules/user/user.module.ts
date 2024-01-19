@@ -8,10 +8,16 @@ import { otpService } from '../otp/otp.service';
 import { VerificationEntity } from '../otp/otp.entity';
 import { AuthService } from '../auth/auth.service';
 import { PassportModule } from '@nestjs/passport';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, VerificationEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      VerificationEntity,
+      LoginAttemptEntity,
+    ]),
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
@@ -22,7 +28,7 @@ import { PassportModule } from '@nestjs/passport';
       },
     }),
   ],
-  providers: [UserService, otpService, AuthService],
+  providers: [UserService, otpService, AuthService, LoginAttemptsService],
   controllers: [UserController],
 })
 export class UserModule {}

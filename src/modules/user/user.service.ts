@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
   BadRequestException,
   Injectable,
@@ -16,6 +17,8 @@ import { otpService } from '../otp/otp.service';
 import { OtpDTO } from '../otp/dto/otp.dto';
 import { AuthService } from '../auth/auth.service';
 import { Payload } from '../auth/payload.dto';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { EActionStatus } from 'src/enums/ActionStatus';
 
 @Injectable()
 export class UserService {
@@ -24,6 +27,7 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
     private verifyService: otpService,
     private readonly authService: AuthService,
+    private loginAttemptService: LoginAttemptsService,
   ) {}
   /*
      @role saves a new user
@@ -89,10 +93,21 @@ export class UserService {
       role: user.role,
       avatar_url: user.avatar_url,
     };
+    const loginAttempts = await this.loginAttemptService.getUserAttempts(
+      user.id,
+    );
+    await this.loginAttemptService.saveAttempt({
+      user: user.id,
+      status: EActionStatus.SUCCESS,
+    });
     return {
       success: true,
       data: {
         accessToken: await this.authService.signToken(userPayload),
+        loginAttempts: {
+          counts: loginAttempts.length,
+          attempts: loginAttempts,
+        },
       },
     };
   }

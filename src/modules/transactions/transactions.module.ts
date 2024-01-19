@@ -36,6 +36,8 @@ import { LoanRequestsService } from '../loan-requests/loan-requests.service';
 import { LoanRequestsEntity } from '../loan-requests/loan-requests.entity';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationEntity } from '../notifications/notifications.entity';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
 
 @Module({
   imports: [
@@ -52,6 +54,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
       VerificationEntity,
       LoanRequestsEntity,
       NotificationEntity,
+      LoginAttemptEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -75,6 +78,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
     AuthService,
     LoanRequestsService,
     NotificationsService,
+    LoginAttemptsService,
   ],
   controllers: [TransactionsController],
 })

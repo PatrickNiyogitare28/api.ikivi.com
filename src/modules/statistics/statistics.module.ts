@@ -23,6 +23,8 @@ import { AuthMiddleware } from 'src/common/middlewares/auth.middleware';
 import { GroupInfoService } from '../group-info/group-info.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationEntity } from '../notifications/notifications.entity';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
       VerificationEntity,
       GroupInfoEntity,
       NotificationEntity,
+      LoginAttemptEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -57,6 +60,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
     AuthService,
     GroupInfoService,
     NotificationsService,
+    LoginAttemptsService,
   ],
 })
 export class StatisticsModule implements NestModule {
