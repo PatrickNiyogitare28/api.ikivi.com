@@ -33,6 +33,7 @@ import { LogsHistoryModule } from './modules/logs-history/logs-history.module';
 import { AppLoggerMiddleware } from './common/middlewares/logs.middleware';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { LoginAttemptsModule } from './modules/login-attempts/login-attempts.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     LogsHistoryModule,
     StatisticsModule,
     NotificationsModule,
+    LoginAttemptsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

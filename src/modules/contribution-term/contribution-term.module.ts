@@ -18,6 +18,8 @@ import { VerificationEntity } from '../otp/otp.entity';
 import { AuthService } from '../auth/auth.service';
 import { NotificationEntity } from '../notifications/notifications.entity';
 import { NotificationsService } from '../notifications/notifications.service';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { NotificationsService } from '../notifications/notifications.service';
       UserEntity,
       VerificationEntity,
       NotificationEntity,
+      LoginAttemptEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -46,6 +49,7 @@ import { NotificationsService } from '../notifications/notifications.service';
     otpService,
     AuthService,
     NotificationsService,
+    LoginAttemptsService,
   ],
   controllers: [ContributionTermController],
 })

@@ -20,6 +20,8 @@ import { VerificationEntity } from '../otp/otp.entity';
 import { LogEntity } from '../logs/logs.entity';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationEntity } from '../notifications/notifications.entity';
+import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
+import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
       VerificationEntity,
       LogEntity,
       NotificationEntity,
+      LoginAttemptEntity,
     ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
@@ -51,6 +54,7 @@ import { NotificationEntity } from '../notifications/notifications.entity';
     otpService,
     AuthService,
     NotificationsService,
+    LoginAttemptsService,
   ],
 })
 export class JoinRequestsModule implements NestModule {
