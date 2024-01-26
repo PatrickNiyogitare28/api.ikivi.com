@@ -2,6 +2,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,7 @@ import { Repository } from 'typeorm';
 import { AddNotificationDto } from './dto/create.dto';
 import { ENotificationStatus } from 'src/enums/ENotificationStatus';
 import { UserEntity } from '../user/users.entity';
+import { EUserRole } from 'src/enums/EUserRole';
 
 @Injectable()
 export class NotificationsService {
@@ -85,5 +87,30 @@ export class NotificationsService {
       message: 'Notifications updated successfully',
       data: updatedNotifications,
     };
+  }
+
+  public async deleteNotification(
+    notificationId: string,
+    userId: string,
+    role: EUserRole,
+  ) {
+    const notification = await this.notificationRepository.findOne({
+      where: { id: notificationId },
+    });
+    if (!notification) throw new NotFoundException('Notification not found');
+    if (
+      (notification.user as unknown as UserEntity).id != userId &&
+      role != EUserRole.SYSTEM_ADMIN
+    )
+      throw new BadRequestException('Access denied');
+    try {
+      await this.notificationRepository.delete({ id: notificationId });
+      return {
+        success: true,
+        message: 'Notification deleted successfully',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }
