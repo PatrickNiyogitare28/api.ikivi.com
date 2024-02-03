@@ -10,11 +10,14 @@ import { AuthService } from '../auth/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
 import { LoginAttemptEntity } from '../login-attempts/login-attempts.entity';
+import { GroupMembersService } from '../group-members/group-members.service';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UserEntity,
+      GroupMembersEntity,
       VerificationEntity,
       LoginAttemptEntity,
     ]),

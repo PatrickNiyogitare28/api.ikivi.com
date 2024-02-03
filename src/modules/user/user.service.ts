@@ -19,12 +19,15 @@ import { AuthService } from '../auth/auth.service';
 import { Payload } from '../auth/payload.dto';
 import { LoginAttemptsService } from '../login-attempts/login-attempts.service';
 import { EActionStatus } from 'src/enums/ActionStatus';
+import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    @InjectRepository(GroupMembersEntity)
+    private groupMembersRepository: Repository<GroupMembersEntity>,
     private verifyService: otpService,
     private readonly authService: AuthService,
     private loginAttemptService: LoginAttemptsService,
@@ -96,6 +99,11 @@ export class UserService {
     const loginAttempts = await this.loginAttemptService.getUserAttempts(
       user.id,
     );
+    // const membership = await this.membershipService.getUserMemberships(user.id);
+    const memberships = await this.groupMembersRepository.find({
+      where: { user: user.id },
+    });
+
     await this.loginAttemptService.saveAttempt({
       user: user.id,
       status: EActionStatus.SUCCESS,
@@ -108,6 +116,7 @@ export class UserService {
           counts: loginAttempts.length,
           attempts: loginAttempts,
         },
+        memberships,
       },
     };
   }
