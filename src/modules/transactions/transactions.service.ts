@@ -17,7 +17,7 @@ export class TransactionsService {
     private loanService: LoanService,
     private loanRequestService: LoanRequestsService,
     private groupService: GroupService,
-    private groupMembersService: GroupMembersService
+    private groupMembersService: GroupMembersService,
   ) {}
 
   public async getPersonalGroupTransactions(
@@ -32,13 +32,25 @@ export class TransactionsService {
         role,
       );
 
-    const periodicEarnsResponse = await this.periodicEarnService.userEarnHistory(userId, groupId, role);
+    const periodicEarnsResponse =
+      await this.periodicEarnService.userEarnHistory(userId, groupId, role);
     const periodicEarns = periodicEarnsResponse.data;
 
-    const paidLoansResponse = await this.loanService.getUserGroupLoanByStatus(groupId, role, userId, ELoanStatus.PAID);
+    const paidLoansResponse = await this.loanService.getUserGroupLoanByStatus(
+      groupId,
+      role,
+      userId,
+      ELoanStatus.PAID,
+    );
     const paidLoans = paidLoansResponse.data;
-    
-    const nonPaidLoansResponse = await this.loanService.getUserGroupLoanByStatus(groupId, role, userId, ELoanStatus.PAYMENT_PENDING); 
+
+    const nonPaidLoansResponse =
+      await this.loanService.getUserGroupLoanByStatus(
+        groupId,
+        role,
+        userId,
+        ELoanStatus.PAYMENT_PENDING,
+      );
     const nonPaidLoans = nonPaidLoansResponse.data;
 
     const mergedArray = [
@@ -58,11 +70,11 @@ export class TransactionsService {
     // Calculate total cash out and total cash in
     const totalCashOut = mergedArray
       .filter((item) => item.type === 'CASH_OUT')
-      .reduce((acc, curr:any) => acc + Number(curr.amount), 0);
+      .reduce((acc, curr: any) => acc + Number(curr.amount), 0);
 
     const totalCashIn = mergedArray
       .filter((item) => item.type === 'CASH_IN')
-      .reduce((acc, curr:any) => acc + Number(curr.amount), 0);
+      .reduce((acc, curr: any) => acc + Number(curr.amount), 0);
 
     const result = {
       transactions: sortedDataList,
@@ -73,7 +85,7 @@ export class TransactionsService {
     return result;
   }
 
-    public async getGroupLoanHistory(
+  public async getGroupLoanHistory(
     group_id: string,
     role: EUserRole,
     user_id: string,
@@ -86,7 +98,6 @@ export class TransactionsService {
       group.id,
       role,
     );
-    
 
     // const loans = await this.loanService.getAllGroupLoans(group_id);
 
@@ -98,12 +109,16 @@ export class TransactionsService {
     //   loanRequests
     // };
 
-    const loans = (await this.loanService.getAllGroupLoans(group_id)).map((loan) => ({
-      ...loan,
-      type: 'LOAN',
-    }));
+    const loans = (await this.loanService.getAllGroupLoans(group_id)).map(
+      (loan) => ({
+        ...loan,
+        type: 'LOAN',
+      }),
+    );
 
-    const loanRequests = (await this.loanRequestService.getAllGroupLoanRequest(group_id)).map((request) => ({
+    const loanRequests = (
+      await this.loanRequestService.getAllGroupLoanRequest(group_id)
+    ).map((request) => ({
       type: 'LOAN_REQUEST',
       loan_request: request,
     }));
@@ -118,9 +133,9 @@ export class TransactionsService {
     const mergedArray = [...loans, ...loanRequests];
 
     const sortedDataList = mergedArray.sort((a, b) => {
-        const dateA = new Date(a.loan_request.created_at).getTime();
-        const dateB = new Date(b.loan_request.created_at).getTime();
-        return dateB - dateA; // Compare in reverse order for descending sort
+      const dateA = new Date(a.loan_request.created_at).getTime();
+      const dateB = new Date(b.loan_request.created_at).getTime();
+      return dateB - dateA; // Compare in reverse order for descending sort
     });
 
     return {
@@ -128,5 +143,4 @@ export class TransactionsService {
       loan_history: sortedDataList,
     };
   }
-
 }
