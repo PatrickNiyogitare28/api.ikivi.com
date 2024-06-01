@@ -11,7 +11,11 @@ import { GroupMembersEntity } from '../group-members/group-members.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([JoinCodesEntity, GroupEntity, GroupMembersEntity]),
+    TypeOrmModule.forFeature([
+      JoinCodesEntity,
+      GroupEntity,
+      GroupMembersEntity,
+    ]),
     JwtModule.register({
       secret: process.env.SECRETKEY,
       signOptions: {

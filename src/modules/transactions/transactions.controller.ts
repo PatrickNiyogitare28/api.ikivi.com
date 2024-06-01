@@ -36,15 +36,11 @@ export class TransactionsController {
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiParam({ name: 'group', description: 'Group Id' })
   @Get('/loans/group/:group/history')
-  async groupLoanHistory(
-    @Param('group') group_id: string,
-    @Req() req: any,
-  ) {
+  async groupLoanHistory(@Param('group') group_id: string, @Req() req: any) {
     return await this.transactionService.getGroupLoanHistory(
       group_id,
       req.user.role,
       req.user.user_id,
     );
   }
-
 }
