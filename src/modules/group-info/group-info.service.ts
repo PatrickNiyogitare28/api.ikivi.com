@@ -24,7 +24,7 @@ export class GroupInfoService {
     return groupInfo;
   }
 
-  // Add on group total capital
+  // Add on group total capital.
   public async addOnGroupCapital(dto: AddOnGroupTotalCapitalDto) {
     const { group, updated_by, amount } = dto;
 
