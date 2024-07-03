@@ -1,4 +1,4 @@
-name: Deployment CI/CD
+name: Deployment To Vercel
 
 on:
   push:
@@ -6,18 +6,21 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+
       - run: yarn install
+
       - name: Create .env file
         run: |
           touch .env
@@ -44,6 +47,17 @@ jobs:
           echo "BACKEND_DOMAIN=${{ secrets.BACKEND_DOMAIN }}" >> .env 
           echo "SECRETKEY=${{ secrets.SECRETKEY }}" >> .env 
           echo "EXPIRESIN=${{ secrets.EXPIRESIN }}" >> .env 
-          echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env 
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env 
-          echo "SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }}" >> .env 
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Authenticate with Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel login --token $VERCEL_TOKEN
+
+      - name: Build and deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token $VERCEL_TOKEN
