@@ -48,12 +48,15 @@ jobs:
           echo "SECRETKEY=${{ secrets.SECRETKEY }}" >> .env 
           echo "EXPIRESIN=${{ secrets.EXPIRESIN }}" >> .env 
           echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env 
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}" >> .env
+          echo "Logging .env file contents:"
+          cat .env
 
       - name: Install Vercel CLI
         run: npm install -g vercel
 
       - name: Print Vercel token
-        run: echo "Log Env Variable VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+        run: echo "Env Variable VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
 
       - name: Build and deploy to Vercel
         env:
