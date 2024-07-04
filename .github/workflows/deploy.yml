@@ -52,7 +52,71 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
 
+      - name: Print Vercel token
+        run: echo "Env Variable VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+
       - name: Build and deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token $VERCEL_TOKEN
+name: Deployment CI/CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: yarn install
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "Creating .env file..."
+          echo "# Auto-generated .env file from GitHub Actions" > .env
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env 
+          echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env 
+          echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env 
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env 
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env 
+          echo "PORT=${{ secrets.PORT }}" >> .env 
+          echo "MODE=${{ secrets.MODE }}" >> .env 
+          echo "RUN_MIGRATIONS=${{ secrets.RUN_MIGRATIONS }}" >> .env 
+          echo "DATABASE_TYPE=${{ secrets.DATABASE_TYPE }}" >> .env 
+          echo "DATABASE_BACKEND_URL=${{ secrets.DATABASE_BACKEND_URL }}" >> .env 
+          echo "DATABASE_SYNCHRONIZE=${{ secrets.DATABASE_SYNCHRONIZE }}" >> .env 
+          echo "DATABASE_MAX_CONNECTIONS=${{ secrets.DATABASE_MAX_CONNECTIONS }}" >> .env 
+          echo "DATABASE_SSL_ENABLED=${{ secrets.DATABASE_SSL_ENABLED }}" >> .env 
+          echo "DATABASE_REJECT_UNAUTHORIZED=${{ secrets.DATABASE_REJECT_UNAUTHORIZED }}" >> .env 
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env 
+          echo "APP_PORT=${{ secrets.APP_PORT }}" >> .env 
+          echo "APP_NAME=${{ secrets.APP_NAME }}" >> .env 
+          echo "API_PREFIX=${{ secrets.API_PREFIX }}" >> .env 
+          echo "BACKEND_DOMAIN=${{ secrets.BACKEND_DOMAIN }}" >> .env 
+          echo "SECRETKEY=${{ secrets.SECRETKEY }}" >> .env 
+          echo "EXPIRESIN=${{ secrets.EXPIRESIN }}" >> .env 
+          echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env 
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Print Vercel token
+        run: echo "Log Env Variable VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Build and deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token $VERCEL_TOKEN
